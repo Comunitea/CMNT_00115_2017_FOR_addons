@@ -1,0 +1,86 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#   * sale_volume
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-11-30 11:34+0000\n"
+"PO-Revision-Date: 2017-11-30 12:36+0100\n"
+"Last-Translator: Jesús Ventosinos Mayor <jesus@comunitea.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: sale_volume
+#: code:addons/sale_volume/models/stock_move.py:51
+#, python-format
+msgid "Cannot set the done quantity from this stock move, work directly with the move lines."
+msgstr "Cannot set the done quantity from this stock move, work directly with the move lines."
+
+#. module: sale_volume
+#: model:ir.model.fields,field_description:sale_volume.field_sale_order_line_escuadria_float
+#: model:ir.model.fields,field_description:sale_volume.field_stock_move_escuadria_float
+msgid "Escuadria Float"
+msgstr "Escuadria Float"
+
+#. module: sale_volume
+#: model:ir.model.fields,field_description:sale_volume.field_sale_order_line_escuadria
+#: model:ir.model.fields,field_description:sale_volume.field_stock_move_escuadria
+#: model:ir.model.fields,field_description:sale_volume.field_stock_move_line_escuadria
+msgid "Escuadría"
+msgstr "Escuadría"
+
+#. module: sale_volume
+#: model:ir.model.fields,field_description:sale_volume.field_stock_move_initial_demand_units
+msgid "Initial Demand Units"
+msgstr "Demanda inicial(unidades)"
+
+#. module: sale_volume
+#: model:ir.model,name:sale_volume.model_stock_move_line
+msgid "Packing Operation"
+msgstr "Operación de empaquetado"
+
+#. module: sale_volume
+#: model:ir.model,name:sale_volume.model_procurement_rule
+msgid "Procurement Rule"
+msgstr "Regla de abastecimiento"
+
+#. module: sale_volume
+#: model:ir.model.fields,field_description:sale_volume.field_sale_order_line_product_length
+#: model:ir.model.fields,field_description:sale_volume.field_stock_move_line_product_length
+#: model:ir.model.fields,field_description:sale_volume.field_stock_move_product_length
+msgid "Product Length"
+msgstr "Largo"
+
+#. module: sale_volume
+#: model:ir.model,name:sale_volume.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Línea de pedido de venta"
+
+#. module: sale_volume
+#: model:ir.model,name:sale_volume.model_stock_move
+msgid "Stock Move"
+msgstr "Movimiento de existencias"
+
+#. module: sale_volume
+#: model:ir.model.fields,field_description:sale_volume.field_stock_move_line_escuadria_float
+msgid "escuadría"
+msgstr "Escuadría"
+
+#. module: sale_volume
+#: code:addons/sale_volume/models/sale_order_line.py:30
+#: code:addons/sale_volume/models/stock_move.py:31
+#, python-format
+msgid "invalid escuadría"
+msgstr "Escuadría inválida"
+
+#. module: sale_volume
+#: model:ir.model.fields,field_description:sale_volume.field_sale_order_line_product_uom_unit
+#: model:ir.model.fields,field_description:sale_volume.field_stock_move_line_product_uom_unit
+#: model:ir.model.fields,field_description:sale_volume.field_stock_move_product_uom_unit
+msgid "units"
+msgstr "unidades"
