@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 11:34+0000\n"
-"PO-Revision-Date: 2017-11-30 12:36+0100\n"
+"PO-Revision-Date: 2017-11-30 14:07+0100\n"
 "Last-Translator: Jesús Ventosinos Mayor <jesus@comunitea.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,6 +28,7 @@ msgid "Escuadria Float"
 msgstr "Escuadria Float"
 
 #. module: sale_volume
+#: model:ir.model.fields,field_description:sale_volume.field_account_invoice_line_escuadria
 #: model:ir.model.fields,field_description:sale_volume.field_sale_order_line_escuadria
 #: model:ir.model.fields,field_description:sale_volume.field_stock_move_escuadria
 #: model:ir.model.fields,field_description:sale_volume.field_stock_move_line_escuadria
@@ -50,6 +51,7 @@ msgid "Procurement Rule"
 msgstr "Regla de abastecimiento"
 
 #. module: sale_volume
+#: model:ir.model.fields,field_description:sale_volume.field_account_invoice_line_product_length
 #: model:ir.model.fields,field_description:sale_volume.field_sale_order_line_product_length
 #: model:ir.model.fields,field_description:sale_volume.field_stock_move_line_product_length
 #: model:ir.model.fields,field_description:sale_volume.field_stock_move_product_length
@@ -72,6 +74,7 @@ msgid "escuadría"
 msgstr "Escuadría"
 
 #. module: sale_volume
+#: code:addons/sale_volume/models/account_invoice_line.py:53
 #: code:addons/sale_volume/models/sale_order_line.py:30
 #: code:addons/sale_volume/models/stock_move.py:31
 #, python-format
@@ -79,6 +82,7 @@ msgid "invalid escuadría"
 msgstr "Escuadría inválida"
 
 #. module: sale_volume
+#: model:ir.model.fields,field_description:sale_volume.field_account_invoice_line_product_uom_unit
 #: model:ir.model.fields,field_description:sale_volume.field_sale_order_line_product_uom_unit
 #: model:ir.model.fields,field_description:sale_volume.field_stock_move_line_product_uom_unit
 #: model:ir.model.fields,field_description:sale_volume.field_stock_move_product_uom_unit

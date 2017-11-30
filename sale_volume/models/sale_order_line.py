@@ -47,3 +47,10 @@ class SaleOrderLine(models.Model):
         res['product_length'] = self.product_length
         res['initial_demand_units'] = self.product_uom_unit
         return res
+
+    @api.multi
+    def _prepare_invoice_line(self, qty):
+        res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
+        res['escuadria'] = self.escuadria
+        res['product_length'] = self.product_length
+        return res
