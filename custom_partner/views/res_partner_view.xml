@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- © 2017 Comunitea
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_partner_account" model="ir.ui.view">
+        <field name="name">res.partner.account.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='accounting_entries']" position="after">
+                <group string="Imported Accounts" name="imported_accounts">
+                    <field name="cod_import_1"/>
+                    <field name="cod_import_2"/>
+                    <field name="cod_import_3"/>
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
