@@ -12,11 +12,13 @@
                 <field name="product_uom_unit"/>
                 <field name="escuadria"/>
                 <field name="product_length"/>
+                <field name="attributes" widget="many2many_tags"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/form//field[@name='price_unit']" position="before">
                 <field name="product_uom_unit"/>
                 <field name="escuadria"/>
                 <field name="product_length"/>
+                <field name="attributes" widget="many2many_tags"/>
             </xpath>
         </field>
     </record>

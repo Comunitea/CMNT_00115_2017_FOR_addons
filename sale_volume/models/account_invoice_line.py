@@ -19,6 +19,10 @@ class AccountInvoiceLine(models.Model):
     quantity = fields.Float('')
     quantity = fields.Float(compute='_compute_quantity',
                             store=True)
+    attribute_ids = fields.Many2many(
+        comodel_name='sale.line.attributes',
+        string='Attributes',
+    )
 
     @api.model
     def create(self, vals):

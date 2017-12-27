@@ -12,6 +12,7 @@
                 <field name="product_uom_unit"/>
                 <field name="escuadria"/>
                 <field name="product_length"/>
+                 <field name="attributes" widget="many2many_tags"/>
             </xpath>
         </field>
     </record>

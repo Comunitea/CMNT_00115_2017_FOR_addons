@@ -18,6 +18,10 @@ class SaleOrderLine(models.Model):
     product_length = fields.Float()
     product_uom_qty = fields.Float(compute='_compute_product_uom_qty',
                                    store=True)
+    attribute_ids = fields.Many2many(
+        comodel_name='sale.line.attributes',
+        string='Attributes',
+    )
 
     @api.depends('escuadria')
     def _compute_escuadria_float(self):
@@ -53,4 +57,5 @@ class SaleOrderLine(models.Model):
         res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
         res['escuadria'] = self.escuadria
         res['product_length'] = self.product_length
+        res['attribute_ids'] = [(6, 0, self.attribute_ids.ids)],
         return res
