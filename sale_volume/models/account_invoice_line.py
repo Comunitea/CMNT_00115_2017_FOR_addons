@@ -20,7 +20,7 @@ class AccountInvoiceLine(models.Model):
     quantity = fields.Float(compute='_compute_quantity',
                             store=True)
     attribute_ids = fields.Many2many(
-        comodel_name='sale.line.attributes',
+        comodel_name='sale.line.attribute',
         string='Attributes',
     )
 

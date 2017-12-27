@@ -8,4 +8,6 @@ from odoo.tools.safe_eval import safe_eval
 
 
 class SaleLineAttribute(models.Model):
+    _name = "sale.line.attribute"
+
     name = fields.Char('Name')

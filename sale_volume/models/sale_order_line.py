@@ -19,7 +19,7 @@ class SaleOrderLine(models.Model):
     product_uom_qty = fields.Float(compute='_compute_product_uom_qty',
                                    store=True)
     attribute_ids = fields.Many2many(
-        comodel_name='sale.line.attributes',
+        comodel_name='sale.line.attribute',
         string='Attributes',
     )
 
@@ -57,5 +57,25 @@ class SaleOrderLine(models.Model):
         res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
         res['escuadria'] = self.escuadria
         res['product_length'] = self.product_length
-        res['attribute_ids'] = [(6, 0, self.attribute_ids.ids)],
+        res['attribute_ids'] = [(6, 0, self.attribute_ids.ids)]
         return res
+
+    @api.multi
+    @api.onchange('product_id', 'attribute_ids')
+    def product_id_change(self):
+        res = super(SaleOrderLine, self).product_id_change()
+        if self.product_id:
+            self.name = self.product_id.name
+            attr_str = ""
+            if self.attribute_ids:
+                attr_str = " (" + ", ".join(
+                    self.attribute_ids.mapped('name')) + ")"
+            self.name += attr_str
+        else:
+            self.attribute_ids = None
+
+        return res
+
+
+
+
