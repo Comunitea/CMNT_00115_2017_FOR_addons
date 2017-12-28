@@ -42,8 +42,13 @@ class SaleOrderLine(models.Model):
                 line.product_uom_qty = line.product_uom_unit * \
                     line.product_length
             else:
-                line.product_uom_qty = line.product_uom_unit * \
-                    line.escuadria_float / 10000 * line.product_length
+                if line.escuadria.find('x') != -1 or line.escuadria.find(
+                        'X') != -1:
+                    line.product_uom_qty = line.product_uom_unit * \
+                        line.escuadria_float / 10000 * line.product_length
+                else:
+                    line.product_uom_qty = line.product_uom_unit * \
+                        line.escuadria_float /100 * line.product_length
 
     def _prepare_procurement_values(self, group_id=False):
         res = super(SaleOrderLine, self)._prepare_procurement_values(group_id)
