@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- © 2018 Comunitea
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <template id="report_saleorder_document_custom" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//div[@t-if='doc.user_id.name']" position="replace" />
+        <xpath expr="//tbody[@class='sale_tbody']/../thead/tr/th[5]" position="replace"/>
+        <xpath expr="//tbody[@class='sale_tbody']//t[@t-as='l']//tr/td[5]" position="replace"/>
+
+        <xpath expr="//tbody[@class='sale_tbody']/../thead/tr/th[1]" position="after">
+            <th class="text-right">Escuadria</th>
+            <th class="text-right">Length</th>
+        </xpath>
+        <xpath expr="//tbody[@class='sale_tbody']//t[@t-as='l']//tr/td[1]" position="after">
+            <td class="text-right">
+                <span t-field="l.escuadria"/>
+            </td>
+            <td class="text-right">
+                <span t-field="l.product_length"/>
+            </td>
+        </xpath>
+        <xpath expr="//tbody[@class='sale_tbody']/../thead/tr/th[1]" position="before">
+            <th >Units</th>
+        </xpath>
+        <xpath expr="//tbody[@class='sale_tbody']//t[@t-as='l']//tr/td[1]" position="before">
+            <td>
+                <span t-field="l.product_uom_unit"/>
+            </td>
+        </xpath>
+        <xpath expr="//p[@t-field='doc.date_order']" position="attributes">
+            <attribute name="t-field-options">{'widget': 'date'}</attribute>
+        </xpath>
+        <xpath expr="//p[@t-field='doc.confirmation_date']" position="attributes">
+            <attribute name="t-field-options">{'widget': 'date'}</attribute>
+        </xpath>
+    </template>
+
+    <template id="report_sale_payment_mode_bank_account" inherit_id="account_payment_sale.report_sale_payment_mode">
+        <xpath expr="//p[@id='payment_mode_note']" position="after">
+            <t t-if="doc.company_id.id != 13">
+                <t t-foreach="doc.payment_mode_id.get_bank_strings()" t-as="bank">
+                    <p t-esc="bank"/>
+                </t>
+            </t>
+        </xpath>
+    </template>
+</odoo>

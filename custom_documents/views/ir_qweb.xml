@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- © 2018 Comunitea
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <template id="custom_contact" inherit_id="base.contact">
+        <xpath expr="//t[@t-call='base.contact_name']/.." position="after">
+            <div t-if="vat and 'vat' in fields">
+                VAT: <span itemprop="vat" t-esc="vat"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="external_layout_standard_add_vat" inherit_id="web.external_layout_standard">
+        <xpath expr="//span[@t-field='company.partner_id']" position="attributes">
+            <attribute name="t-field-options">{"widget": "contact", "fields": ["address", "name", "vat"], "no_marker": true}</attribute>
+        </xpath>
+        <xpath expr="//img[@t-if='company.logo']" position="attributes">
+            <attribute name="style">max-height: 75px</attribute>
+        </xpath>
+        <xpath expr="//div[@class='header']" position="attributes">
+            <attribute name="t-if">company.id != 13</attribute>
+        </xpath>
+        <xpath expr="//li[@t-if='company.phone']" position="replace"/>
+        <xpath expr="//li[@t-if='company.email']" position="replace"/>
+        <xpath expr="//li[@t-if='company.vat']" position="replace"/>
+        <xpath expr="//span[@t-field='company.website']" position="attributes">
+            <attribute name="t-if">company.id != 13</attribute>
+        </xpath>
+        <xpath expr="//div[@class='text-muted']" position="replace"/>
+    </template>
+
+</odoo>
