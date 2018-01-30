@@ -13,11 +13,14 @@
     'installable': True,
     'depends': [
         'base',
-        'account_payment_sale'
+        'account_payment_sale',
+        'stock'
     ],
     'data': [
         'views/ir_qweb.xml',
         'views/report_sale_order.xml',
+        'views/report_deliveryslip.xml',
+        'views/report_invoice.xml',
         'data/report_paperformat.xml'
     ],
 }

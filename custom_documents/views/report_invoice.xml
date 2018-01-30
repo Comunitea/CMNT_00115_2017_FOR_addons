@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- © 2018 Comunitea
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+    <template id="report_invoice_document_custom" inherit_id="account.report_invoice_document">
+        <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[1]" position="after">
+            <th>Escuadria</th>
+            <th>Length</th>
+        </xpath>
+        <xpath expr="//table[@name='invoice_line_table']/tbody/tr/td[1]" position="after">
+            <td>
+                <span t-field="l.escuadria"/>
+            </td>
+            <td>
+                <span t-field="l.product_length"/>
+            </td>
+        </xpath>
+
+        <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[1]" position="before">
+            <th><strong>Units</strong></th>
+        </xpath>
+        <xpath expr="//table[@name='invoice_line_table']/tbody/tr[1]/td[1]" position="before">
+            <td>
+                <span t-field="l.product_uom_unit"/>
+            </td>
+        </xpath>
+        <xpath expr="//table[@name='invoice_line_table']/tbody/tr[2]/td[1]" position="before">
+            <td>
+            </td>
+            <td>
+            </td>
+            <td>
+            </td>
+        </xpath>
+        <xpath expr="//span[@t-field='o.comment']/..">
+            <p t-if="o.partner_bank_id">
+                <span t-field="o.partner_bank_id.bank_id.name"/>: <span t-field="o.partner_bank_id.acc_number"/>
+            </p>
+        </xpath>
+    </template>
+</odoo>
