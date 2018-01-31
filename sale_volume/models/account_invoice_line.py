@@ -62,10 +62,10 @@ class AccountInvoiceLine(models.Model):
             else:
                 if line.escuadria.find('x') != -1 or line.escuadria.find(
                         'X') != -1:
-                    line.product_uom_qty = line.product_uom_unit * \
+                    line.quantity = line.product_uom_unit * \
                                            line.escuadria_float / 10000 * \
                                            line.product_length
                 else:
-                    line.product_uom_qty = line.product_uom_unit * \
+                    line.quantity = line.product_uom_unit * \
                                            line.escuadria_float / 100 * \
                                            line.product_length

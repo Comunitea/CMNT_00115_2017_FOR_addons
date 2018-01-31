@@ -17,4 +17,15 @@
             </xpath>
         </field>
     </record>
+
+    <record id="invoice_form_supllier_add_unit" model="ir.ui.view">
+        <field name="name">account.invoice.supplier.unit.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='quantity']" position="before">
+                <field name="product_uom_unit"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>
