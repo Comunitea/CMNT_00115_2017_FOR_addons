@@ -13,6 +13,7 @@
                 <field name="escuadria"/>
                 <field name="product_length"/>
                  <field name="attribute_ids" widget="many2many_tags"/>
+                <field name="ud_qty_ratio" invisible="1"/>
             </xpath>
         </field>
     </record>

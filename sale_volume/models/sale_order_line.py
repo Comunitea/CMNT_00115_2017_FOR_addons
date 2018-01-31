@@ -15,8 +15,6 @@ class SaleOrderLine(models.Model):
     escuadria_float = fields.Float(compute='_compute_escuadria_float',
                                    store=True)
     product_length = fields.Float()
-    product_uom_qty = fields.Float(compute='_compute_product_uom_qty',
-                                   store=True)
     attribute_ids = fields.Many2many(
         comodel_name='sale.line.attribute',
         string='Attributes',
@@ -32,7 +30,7 @@ class SaleOrderLine(models.Model):
             except ValueError:
                 raise UserError(_('invalid escuadría'))
 
-    @api.depends('product_uom_unit', 'escuadria', 'product_length')
+    @api.onchange('product_uom_unit', 'escuadria', 'product_length')
     def _compute_product_uom_qty(self):
         for line in self:
             if not line.escuadria_float and not line.product_length:
@@ -47,7 +45,7 @@ class SaleOrderLine(models.Model):
                         line.escuadria_float / 10000 * line.product_length
                 else:
                     line.product_uom_qty = line.product_uom_unit * \
-                        line.escuadria_float /100 * line.product_length
+                        line.escuadria_float / 100 * line.product_length
 
     def _prepare_procurement_values(self, group_id=False):
         res = super(SaleOrderLine, self)._prepare_procurement_values(group_id)
@@ -59,6 +57,7 @@ class SaleOrderLine(models.Model):
     @api.multi
     def _prepare_invoice_line(self, qty):
         res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
+        res['ud_qty_ratio'] = self.product_uom_qty / self.product_uom_unit
         res['escuadria'] = self.escuadria
         res['product_length'] = self.product_length
         res['attribute_ids'] = [(6, 0, self.attribute_ids.ids)]
@@ -79,7 +78,3 @@ class SaleOrderLine(models.Model):
             self.attribute_ids = None
 
         return res
-
-
-
-

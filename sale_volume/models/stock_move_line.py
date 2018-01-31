@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # © 2017 Comunitea
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
@@ -23,7 +22,16 @@ class StockMoveLine(models.Model):
     def _compute_qty_done(self):
         for move_line in self:
             if not move_line.escuadria_float and not move_line.product_length:
-                move_line.qty_done = move_line.product_uom_unit
+                if move_line.move_id.initial_demand_units != \
+                        move_line.move_id.product_uom_qty:
+                    # La cantidad se establecio a mano, por lo que
+                    # tenemos que calcular la cantidad.
+                    qty = (move_line.move_id.product_uom_qty /
+                           move_line.move_id.initial_demand_units) * \
+                        move_line.product_uom_unit
+                else:
+                    qty = move_line.product_uom_unit
+                move_line.qty_done = qty
             elif not move_line.escuadria_float and move_line.product_length:
                 move_line.qty_done = move_line.product_uom_unit * \
                     move_line.product_length

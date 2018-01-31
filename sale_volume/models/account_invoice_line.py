@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # © 2017 Comunitea
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
@@ -17,12 +16,11 @@ class AccountInvoiceLine(models.Model):
                                    store=True)
     product_length = fields.Float()
     quantity = fields.Float('')
-    quantity = fields.Float(compute='_compute_quantity',
-                            store=True)
     attribute_ids = fields.Many2many(
         comodel_name='sale.line.attribute',
         string='Attributes',
     )
+    ud_qty_ratio = fields.Float(default=1)
 
     @api.model
     def create(self, vals):
@@ -33,7 +31,8 @@ class AccountInvoiceLine(models.Model):
         line = super(AccountInvoiceLine, self).create(vals)
         if vals.get('quantity', False):
             if not line.escuadria_float and not line.product_length:
-                line.product_uom_unit = vals.get('quantity')
+                line.product_uom_unit = vals.get('quantity') / \
+                    vals.get('ud_qty_ratio')
             elif not line.escuadria_float and line.product_length:
                 line.product_uom_unit = vals.get('quantity') \
                     / line.product_length
@@ -41,10 +40,6 @@ class AccountInvoiceLine(models.Model):
                 line.product_uom_unit = vals.get('quantity') / \
                     line.escuadria_float * 10000 / line.product_length
         return line
-
-    @api.multi
-    def write(self, vals):
-        return super(AccountInvoiceLine, self).write(vals)
 
     @api.depends('escuadria')
     def _compute_escuadria_float(self):
@@ -56,11 +51,11 @@ class AccountInvoiceLine(models.Model):
             except ValueError:
                 raise UserError(_('invalid escuadría'))
 
-    @api.depends('product_uom_unit', 'escuadria', 'product_length')
+    @api.onchange('product_uom_unit', 'escuadria', 'product_length')
     def _compute_quantity(self):
         for line in self:
             if not line.escuadria_float and not line.product_length:
-                line.quantity = line.product_uom_unit
+                line.quantity = line.product_uom_unit * line.ud_qty_ratio
             elif not line.escuadria_float and line.product_length:
                 line.quantity = line.product_uom_unit * \
                     line.product_length
@@ -68,8 +63,9 @@ class AccountInvoiceLine(models.Model):
                 if line.escuadria.find('x') != -1 or line.escuadria.find(
                         'X') != -1:
                     line.product_uom_qty = line.product_uom_unit * \
-                                           line.escuadria_float / 10000 * line.product_length
+                                           line.escuadria_float / 10000 * \
+                                           line.product_length
                 else:
                     line.product_uom_qty = line.product_uom_unit * \
-                                           line.escuadria_float / 100 * line.product_length
-
+                                           line.escuadria_float / 100 * \
+                                           line.product_length
