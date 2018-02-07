@@ -16,9 +16,18 @@ class StockMoveLine(models.Model):
     product_length = fields.Float(related='move_id.product_length',
                                   readonly=True)
     qty_done = fields.Float(compute='_compute_qty_done',
-                            store=True)
+                            inverse='_quantity_done_set', store=True)
+    qty_manual_done = fields.Float()
 
-    @api.depends('product_uom_unit', 'escuadria_float', 'product_length')
+    def _quantity_done_set(self):
+        """
+            Solo se edita si unidades es 0
+        """
+        for line in self:
+            line.qty_manual_done = line.qty_done
+
+    @api.depends('product_uom_unit', 'escuadria_float', 'product_length',
+                 'qty_manual_done')
     def _compute_qty_done(self):
         for move_line in self:
             if not move_line.escuadria_float and not move_line.product_length:
@@ -26,9 +35,12 @@ class StockMoveLine(models.Model):
                         move_line.move_id.product_uom_qty:
                     # La cantidad se establecio a mano, por lo que
                     # tenemos que calcular la cantidad.
-                    qty = (move_line.move_id.product_uom_qty /
-                           move_line.move_id.initial_demand_units) * \
-                        move_line.product_uom_unit
+                    if move_line.move_id.initial_demand_units == 0:
+                        qty = move_line.qty_manual_done
+                    else:
+                        qty = (move_line.move_id.product_uom_qty /
+                               move_line.move_id.initial_demand_units) * \
+                            move_line.product_uom_unit
                 else:
                     qty = move_line.product_uom_unit
                 move_line.qty_done = qty

@@ -57,7 +57,10 @@ class SaleOrderLine(models.Model):
     @api.multi
     def _prepare_invoice_line(self, qty):
         res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
-        res['ud_qty_ratio'] = self.product_uom_qty / self.product_uom_unit
+        if self.product_uom_unit == 0:
+            res['ud_qty_ratio'] = 0
+        else:
+            res['ud_qty_ratio'] = self.product_uom_qty / self.product_uom_unit
         res['escuadria'] = self.escuadria
         res['product_length'] = self.product_length
         res['attribute_ids'] = [(6, 0, self.attribute_ids.ids)]

@@ -31,8 +31,11 @@ class AccountInvoiceLine(models.Model):
         line = super(AccountInvoiceLine, self).create(vals)
         if vals.get('quantity', False):
             if not line.escuadria_float and not line.product_length:
-                line.product_uom_unit = vals.get('quantity') / \
-                    vals.get('ud_qty_ratio')
+                if vals.get('ud_qty_ratio') == 0:
+                    line.product_uom_unit = 0
+                else:
+                    line.product_uom_unit = vals.get('quantity') / \
+                        vals.get('ud_qty_ratio')
             elif not line.escuadria_float and line.product_length:
                 line.product_uom_unit = vals.get('quantity') \
                     / line.product_length

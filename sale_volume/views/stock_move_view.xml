@@ -11,7 +11,7 @@
                 <field name="initial_demand_units"/>
             </xpath>
             <xpath expr="//field[@name='move_lines']/tree/field[@name='quantity_done']" position="attributes">
-                <attribute name="readonly">True</attribute>
+                <attribute name="attrs">{'readonly': [('initial_demand_units', '!=', 0)]}</attribute>
             </xpath>
             <xpath expr="//field[@name='move_lines']/tree/field[@name='quantity_done']" position="before">
                 <field name="product_uom_unit"/>
