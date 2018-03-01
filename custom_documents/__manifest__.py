@@ -21,6 +21,8 @@
         'views/report_sale_order.xml',
         'views/report_deliveryslip.xml',
         'views/report_invoice.xml',
+        'views/stock_picking.xml',
+        'views/res_company.xml',
         'data/report_paperformat.xml'
     ],
 }

@@ -16,7 +16,7 @@
                 <span t-field="l.escuadria"/>
             </td>
             <td class="text-right">
-                <span t-field="l.product_length"/>
+                <span t-field="l.product_length" t-if="l.product_length"/>
             </td>
         </xpath>
         <xpath expr="//tbody[@class='sale_tbody']/../thead/tr/th[1]" position="before">
@@ -24,7 +24,7 @@
         </xpath>
         <xpath expr="//tbody[@class='sale_tbody']//t[@t-as='l']//tr/td[1]" position="before">
             <td>
-                <span t-field="l.product_uom_unit"/>
+                <span t-field="l.product_uom_unit" t-if="l.product_uom_unit"/>
             </td>
         </xpath>
         <xpath expr="//p[@t-field='doc.date_order']" position="attributes">

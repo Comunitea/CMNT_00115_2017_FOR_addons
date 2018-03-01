@@ -8,7 +8,7 @@ class StockMoveLine(models.Model):
 
     _inherit = 'stock.move.line'
 
-    product_uom_unit = fields.Float('units')
+    product_uom_unit = fields.Integer('units')
     escuadria = fields.Char('Escuadría', related='move_id.escuadria',
                             readonly=True)
     escuadria_float = fields.Float(

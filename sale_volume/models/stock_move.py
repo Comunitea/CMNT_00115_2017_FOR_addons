@@ -10,7 +10,7 @@ class StockMove(models.Model):
 
     _inherit = 'stock.move'
 
-    product_uom_unit = fields.Float(
+    product_uom_unit = fields.Integer(
         'units', compute='_compute_product_uom_unit',
         inverse='_inverse_product_uom_unit')
     initial_demand_units = fields.Float(readonly=True)

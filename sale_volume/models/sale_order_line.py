@@ -10,7 +10,7 @@ class SaleOrderLine(models.Model):
 
     _inherit = 'sale.order.line'
 
-    product_uom_unit = fields.Float('units')
+    product_uom_unit = fields.Integer('units')
     escuadria = fields.Char('Escuadría')
     escuadria_float = fields.Float(compute='_compute_escuadria_float',
                                    store=True)

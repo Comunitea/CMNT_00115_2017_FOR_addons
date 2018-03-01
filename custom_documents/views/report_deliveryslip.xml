@@ -20,7 +20,7 @@
                 <span t-field="move.escuadria"/>
             </td>
             <td>
-                <span t-field="move.product_length"/>
+                <span t-field="move.product_length" t-if="move.product_length"/>
             </td>
         </xpath>
 
@@ -29,7 +29,7 @@
         </xpath>
         <xpath expr="//table[@t-if='not o.move_line_ids']/tbody/tr/td[1]" position="before">
             <td>
-                <span t-field="move.initial_demand_units"/>
+                <span t-field="move.initial_demand_units" t-if="move.move_id.initial_demand_units"/>
             </td>
         </xpath>
 
@@ -42,7 +42,7 @@
                 <span t-field="move_line.escuadria"/>
             </td>
             <td>
-                <span t-field="move_line.product_length"/>
+                <span t-field="move_line.product_length" t-if="move_line.product_length"/>
             </td>
         </xpath>
 
@@ -51,8 +51,16 @@
         </xpath>
         <xpath expr="//table[@t-if='o.move_line_ids']/tbody/tr/td[1]" position="before">
             <td>
-                <span t-field="move_line.move_id.initial_demand_units"/>
+                <span t-field="move_line.move_id.initial_demand_units" t-if="move_line.move_id.initial_demand_units"/>
             </td>
+        </xpath>
+
+        <xpath expr="//span[@t-field='move_line.product_id']" position="replace">
+            <span t-field="move_line.with_context(display_default_code=False).product_id"/>
+        </xpath>
+
+        <xpath expr="//span[@t-field='move.product_id']" position="replace">
+            <span t-field="move.with_context(display_default_code=False).product_id"/>
         </xpath>
     </template>
 </odoo>
