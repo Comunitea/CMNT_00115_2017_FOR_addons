@@ -29,7 +29,7 @@
         </xpath>
         <xpath expr="//table[@t-if='not o.move_line_ids']/tbody/tr/td[1]" position="before">
             <td>
-                <span t-field="move.initial_demand_units" t-if="move.move_id.initial_demand_units"/>
+                <span t-field="move.initial_demand_units" t-if="move.initial_demand_units"/>
             </td>
         </xpath>
 
