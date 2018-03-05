@@ -5,3 +5,4 @@ from . import ir_qweb
 from . import account_payment_mode
 from . import res_company
 from . import stock_picking
+from . import account

@@ -71,5 +71,8 @@
             <br/>
             <p t-if="o.note" t-field="o.note"/>
         </xpath>
+        <xpath expr="//span[@t-field='o.name']/.." position="before">
+            <h2>DOCUMENTO CONTROL TRANSPORTE MERCANCÍAS</h2>
+        </xpath>
     </template>
 </odoo>
