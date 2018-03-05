@@ -64,6 +64,11 @@
         </xpath>
 
         <xpath expr="//p[@t-if='o.backorder_id']" position="after">
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
             <p t-if="o.note" t-field="o.note"/>
         </xpath>
     </template>

@@ -13,7 +13,7 @@ class StockMove(models.Model):
     product_uom_unit = fields.Integer(
         'units', compute='_compute_product_uom_unit',
         inverse='_inverse_product_uom_unit')
-    initial_demand_units = fields.Float(readonly=True)
+    initial_demand_units = fields.Integer(readonly=True)
     escuadria = fields.Char('Escuadría', readonly=True)
     escuadria_float = fields.Float(compute='_compute_escuadria_float',
                                    store=True)

@@ -33,6 +33,13 @@
         <xpath expr="//p[@t-field='doc.confirmation_date']" position="attributes">
             <attribute name="t-field-options">{'widget': 'date'}</attribute>
         </xpath>
+        <xpath expr="//p[@t-field='doc.note']" position="before">
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+        </xpath>
     </template>
 
     <template id="report_sale_payment_mode_bank_account" inherit_id="account_payment_sale.report_sale_payment_mode">
