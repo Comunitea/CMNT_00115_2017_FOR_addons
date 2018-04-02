@@ -10,6 +10,5 @@ class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
     @api.onchange('product_id')
-    def _onchange_product_id(self):
-        return super(AccountInvoiceLine,
-                     self.with_context(display_default_code=False))._onchange_product_id()
+    def _onchange_product_id2(self):
+        return self.with_context(display_default_code=False)._onchange_product_id()

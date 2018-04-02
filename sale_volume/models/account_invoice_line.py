@@ -40,6 +40,9 @@ class AccountInvoiceLine(models.Model):
             elif not line.escuadria_float and line.product_length:
                 line.product_uom_unit = vals.get('quantity') \
                     / line.product_length
+            elif not line.product_length:
+                # Puede haber casos en los que se establezca escuadria pero no longitud
+                pass
             else:
                 line.product_uom_unit = vals.get('quantity') / \
                     line.escuadria_float * 10000 / line.product_length
@@ -63,6 +66,9 @@ class AccountInvoiceLine(models.Model):
             elif not line.escuadria_float and line.product_length:
                 line.quantity = line.product_uom_unit * \
                     line.product_length
+            elif not line.product_length:
+                # Puede haber casos en los que se establezca escuadria pero no longitud
+                pass
             else:
                 if line.escuadria.find('x') != -1 or line.escuadria.find(
                         'X') != -1:
