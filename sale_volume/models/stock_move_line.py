@@ -47,7 +47,7 @@ class StockMoveLine(models.Model):
             elif not move_line.escuadria_float and move_line.product_length:
                 move_line.qty_done = move_line.product_uom_unit * \
                     move_line.product_length
-            elif not line.product_length:
+            elif not move_line.product_length:
                 # Puede haber casos en los que se establezca escuadria pero no longitud
                 pass
             else:
