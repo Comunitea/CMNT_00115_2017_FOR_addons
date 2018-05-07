@@ -26,9 +26,18 @@ class AccountInvoiceLine(models.Model):
     def create(self, vals):
         '''
             Cuando se crea una linea con una cantidad hacemos el calculo de las
-            unidades
+            unidades. Si viene de un pedido de venta simplemente usaremos
+            el ud_qty_ratio.
         '''
         line = super(AccountInvoiceLine, self).create(vals)
+        if self._context.get('from_so', False):
+            if vals.get('ud_qty_ratio') == 0 or not vals.get(
+                    'ud_qty_ratio', False):
+                line.product_uom_unit = 0
+            else:
+                line.product_uom_unit = vals.get('quantity') / \
+                    vals.get('ud_qty_ratio')
+            return line
         if vals.get('quantity', False):
             if not line.escuadria_float and not line.product_length:
                 if vals.get('ud_qty_ratio') == 0 or not vals.get(

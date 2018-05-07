@@ -58,6 +58,11 @@ class SaleOrderLine(models.Model):
         return res
 
     @api.multi
+    def invoice_line_create(self, invoice_id, qty):
+        return super(SaleOrderLine, self.with_context(from_so=True)).invoice_line_create(invoice_id, qty)
+
+
+    @api.multi
     def _prepare_invoice_line(self, qty):
         res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
         if self.product_uom_unit == 0:

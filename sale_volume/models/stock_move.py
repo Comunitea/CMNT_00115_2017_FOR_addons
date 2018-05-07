@@ -18,6 +18,12 @@ class StockMove(models.Model):
     escuadria_float = fields.Float(compute='_compute_escuadria_float',
                                    store=True)
     product_length = fields.Float(readonly=True)
+    ud_qty_ratio = fields.Float(compute='_compute_ud_qty_ratio')
+
+    @api.depends('initial_demand_units', 'product_uom_qty')
+    def _compute_ud_qty_ratio(self):
+        for move in self:
+            move.ud_qty_ratio = self.product_uom_qty / self.initial_demand_units
 
     @api.depends('escuadria')
     def _compute_escuadria_float(self):

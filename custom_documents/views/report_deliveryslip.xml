@@ -56,11 +56,11 @@
         </xpath>
 
         <xpath expr="//span[@t-field='move_line.product_id']" position="replace">
-            <span t-field="move_line.with_context(display_default_code=False).product_id"/>
+            <span t-field="move_line.move_id.name"/>
         </xpath>
 
         <xpath expr="//span[@t-field='move.product_id']" position="replace">
-            <span t-field="move.with_context(display_default_code=False).product_id"/>
+            <span t-field="move.name"/>
         </xpath>
     </template>
 </odoo>
