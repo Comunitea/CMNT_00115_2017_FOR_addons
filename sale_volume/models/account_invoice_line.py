@@ -37,24 +37,6 @@ class AccountInvoiceLine(models.Model):
             else:
                 line.product_uom_unit = vals.get('quantity') / \
                     vals.get('ud_qty_ratio')
-            return line
-        if vals.get('quantity', False):
-            if not line.escuadria_float and not line.product_length:
-                if vals.get('ud_qty_ratio') == 0 or not vals.get(
-                        'ud_qty_ratio', False):
-                    line.product_uom_unit = 0
-                else:
-                    line.product_uom_unit = vals.get('quantity') / \
-                        vals.get('ud_qty_ratio')
-            elif not line.escuadria_float and line.product_length:
-                line.product_uom_unit = vals.get('quantity') \
-                    / line.product_length
-            elif not line.product_length:
-                # Puede haber casos en los que se establezca escuadria pero no longitud
-                pass
-            else:
-                line.product_uom_unit = vals.get('quantity') / \
-                    line.escuadria_float * 10000 / line.product_length
         return line
 
     @api.depends('escuadria')

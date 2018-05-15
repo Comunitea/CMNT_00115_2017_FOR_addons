@@ -10,6 +10,7 @@ class StockMove(models.Model):
 
     _inherit = 'stock.move'
 
+    name = fields.Text('Description', index=True, required=True)
     product_uom_unit = fields.Integer(
         'units', compute='_compute_product_uom_unit',
         inverse='_inverse_product_uom_unit')
