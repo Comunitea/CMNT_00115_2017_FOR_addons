@@ -62,5 +62,8 @@
         <xpath expr="//span[@t-field='move.product_id']" position="replace">
             <span t-field="move.name"/>
         </xpath>
+        <xpath expr="//span[@t-field='o.name']" position="before">
+            <span>Picking </span>
+        </xpath>
     </template>
 </odoo>
