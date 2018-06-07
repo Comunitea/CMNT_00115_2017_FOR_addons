@@ -33,4 +33,3 @@ class StockMoveLine(models.Model):
     def _compute_qty_done(self):
         for move_line in self:
             move_line.qty_done = move_line.move_id.product_uom_unit * move_line.ud_qty_ratio
-            return

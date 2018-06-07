@@ -16,5 +16,5 @@ class ProcurementRule(models.Model):
         res['product_uom_unit'] = values.get('product_uom_unit', False)
         res['escuadria'] = values.get('escuadria', False)
         res['product_length'] = values.get('product_length', False)
-        res['initial_demand_units'] = values.get('initial_demand_units', False)
+        res['initial_demand_units'] = self._context.get('new_units', values.get('initial_demand_units', False))
         return res

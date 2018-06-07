@@ -12,7 +12,8 @@
     'installable': True,
     'depends': [
         'base',
-        'sale'
+        'sale',
+        'sale_stock'
     ],
     'data': [
         'views/sale_order_line_view.xml',

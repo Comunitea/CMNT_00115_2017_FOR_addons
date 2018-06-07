@@ -24,7 +24,7 @@ class StockMove(models.Model):
     @api.depends('initial_demand_units', 'product_uom_qty')
     def _compute_ud_qty_ratio(self):
         for move in self:
-            move.ud_qty_ratio = self.product_uom_qty / self.initial_demand_units
+            move.ud_qty_ratio = move.product_uom_qty / move.initial_demand_units
 
     @api.depends('escuadria')
     def _compute_escuadria_float(self):
@@ -57,3 +57,8 @@ class StockMove(models.Model):
                 raise UserError(_("Cannot set the done quantity from this "
                                   "stock move, work directly with the move"
                                   " lines."))
+
+    def _merge_moves_fields(self):
+        res = super(StockMove, self)._merge_moves_fields()
+        res['initial_demand_units'] = sum(self.mapped('initial_demand_units'))
+        return res

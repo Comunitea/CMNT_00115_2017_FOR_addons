@@ -89,3 +89,19 @@ class SaleOrderLine(models.Model):
             self.attribute_ids = None
 
         return res
+
+    @api.multi
+    def _action_launch_procurement_rule(self):
+        """
+        Pasamos la cantidad en unidades que tendrá el nuevo movimiento
+        """
+        for line in self:
+            if line.state != 'sale' or not line.product_id.type in ('consu','product'):
+                continue
+            qty = 0.0
+            for move in line.move_ids.filtered(lambda r: r.state != 'cancel'):
+                qty += move.initial_demand_units
+            new_units = line.product_uom_unit - qty
+            # Cuando se confirma el pedido se llama con todas las lineas, por lo que llamamos a super por cada linea.
+            res = super(SaleOrderLine, line.with_context(new_units=new_units))._action_launch_procurement_rule()
+        return res
