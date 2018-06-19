@@ -35,8 +35,8 @@ class AccountInvoiceLine(models.Model):
                     'ud_qty_ratio', False):
                 line.product_uom_unit = 0
             else:
-                line.product_uom_unit = vals.get('quantity') / \
-                    vals.get('ud_qty_ratio')
+                line.product_uom_unit = round(vals.get('quantity') /
+                    vals.get('ud_qty_ratio'))
         return line
 
     @api.depends('escuadria')

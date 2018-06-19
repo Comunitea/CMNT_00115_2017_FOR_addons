@@ -71,6 +71,8 @@ class StockMove(models.Model):
 
     def _action_done(self):
         result = super(StockMove, self)._action_done()
+        for move in self:
+            move.initial_demand_units = move.product_uom_unit
         for line in result.mapped('sale_line_id').sudo():
             line.ud_delivered = line._get_delivered_ud()
         return result
