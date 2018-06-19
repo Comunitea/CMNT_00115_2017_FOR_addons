@@ -8,6 +8,9 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree/field[@name='qty_delivered']" position="after">
+                <field name="ud_delivered" attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
+            </xpath>
             <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']" position="before">
                 <field name="product_uom_unit"/>
                 <field name="escuadria" attrs="{'readonly': [('state', 'not in', ('draft', 'sent'))]}"/>

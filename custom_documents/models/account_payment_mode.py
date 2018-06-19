@@ -15,13 +15,15 @@ class AccountPaymentMode(models.Model):
             return []
         self.ensure_one()
         banks = []
-        if self.bank_account_link == 'fixed':
+        if self.bank_account_link == 'fixed' and \
+                self.fixed_journal_id.bank_account_id:
             bank_account = self.fixed_journal_id.bank_account_id
             banks.append('{}: {}'.format(
                 bank_account.bank_id.name,
                 bank_account.acc_number))
         else:
-            for journal in self.variable_journal_ids:
+            for journal in self.variable_journal_ids.filtered(
+                    lambda r: r.bank_account_id):
                 banks.append('{}: {}'.format(
                     journal.bank_account_id.bank_id.name,
                     journal.bank_account_id.acc_number))

@@ -62,3 +62,27 @@ class StockMove(models.Model):
         res = super(StockMove, self)._merge_moves_fields()
         res['initial_demand_units'] = sum(self.mapped('initial_demand_units'))
         return res
+
+    @api.multi
+    def copy(self, default={}):
+        if 'initial_demand_units' not in default and 'product_uom_qty' in default:
+            default['initial_demand_units'] = default['product_uom_qty'] / self.ud_qty_ratio
+        return super(StockMove, self).copy(default)
+
+    def _action_done(self):
+        result = super(StockMove, self)._action_done()
+        for line in result.mapped('sale_line_id').sudo():
+            line.ud_delivered = line._get_delivered_ud()
+        return result
+
+    @api.multi
+    def write(self, vals):
+        res = super(StockMove, self).write(vals)
+        if 'product_uom_qty' in vals:
+            for move in self:
+                if move.state == 'done':
+                    sale_order_lines = self.filtered(
+                        lambda move: move.sale_line_id and move.product_id.expense_policy == 'no').mapped('sale_line_id')
+                    for line in sale_order_lines.sudo():
+                        line.ud_delivered = line._get_delivered_ud()
+        return res

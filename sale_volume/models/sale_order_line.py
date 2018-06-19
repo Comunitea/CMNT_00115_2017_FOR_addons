@@ -15,6 +15,7 @@ class SaleOrderLine(models.Model):
     escuadria_float = fields.Float(compute='_compute_escuadria_float',
                                    store=True)
     product_length = fields.Float()
+    ud_delivered = fields.Float()
     attribute_ids = fields.Many2many(
         comodel_name='sale.line.attribute',
         string='Attributes',
@@ -105,3 +106,15 @@ class SaleOrderLine(models.Model):
             # Cuando se confirma el pedido se llama con todas las lineas, por lo que llamamos a super por cada linea.
             res = super(SaleOrderLine, line.with_context(new_units=new_units))._action_launch_procurement_rule()
         return res
+
+    @api.multi
+    def _get_delivered_ud(self):
+        self.ensure_one()
+        qty = 0.0
+        for move in self.move_ids.filtered(lambda r: r.state == 'done' and not r.scrapped):
+            if move.location_dest_id.usage == "customer":
+                if not move.origin_returned_move_id:
+                    qty += move.product_uom_unit
+            elif move.location_dest_id.usage != "customer" and move.to_refund:
+                qty -= move.product_uom_unit
+        return qty
