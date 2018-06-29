@@ -105,7 +105,7 @@ class SaleOrderLine(models.Model):
             new_units = line.product_uom_unit - qty
             # Cuando se confirma el pedido se llama con todas las lineas, por lo que llamamos a super por cada linea.
             res = super(SaleOrderLine, line.with_context(new_units=new_units))._action_launch_procurement_rule()
-        return res
+        return True
 
     @api.multi
     def _get_delivered_ud(self):

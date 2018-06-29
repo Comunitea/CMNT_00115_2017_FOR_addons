@@ -32,4 +32,11 @@ class StockMoveLine(models.Model):
                  'qty_manual_done')
     def _compute_qty_done(self):
         for move_line in self:
-            move_line.qty_done = move_line.move_id.product_uom_unit * move_line.ud_qty_ratio
+            if move_line.ud_qty_ratio:
+                move_line.qty_done = move_line.move_id.product_uom_unit * move_line.ud_qty_ratio
+            else:
+                # se ejecuta antes compute que set
+                if move_line.move_id.quantity_done:
+                    move_line.qty_done = move_line.move_id.quantity_done
+                else:
+                    move_line.qty_done = move_line.qty_manual_done
