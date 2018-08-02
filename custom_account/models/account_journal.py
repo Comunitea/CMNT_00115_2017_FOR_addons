@@ -15,7 +15,7 @@ class AccountJournal(models.Model):
         currency = self.currency_id or self.company_id.currency_id
         res = super(AccountJournal, self).get_journal_dashboard_datas()
         journals = self.env['account.journal'].sudo().search(
-            [('type', 'in', ['bank', 'cash'])])
+            [('type', '=', 'cash')])
         total_last_balance = 0.0
         for journal in journals:
             last_bank_stmt = self.env['account.bank.statement'].sudo().search(
