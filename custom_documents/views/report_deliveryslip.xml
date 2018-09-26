@@ -11,11 +11,11 @@
             <attribute name="t-field-options">{'widget': 'date'}</attribute>
         </xpath>
 
-        <xpath expr="//table[@t-if='not o.move_line_ids']/thead/tr/th[1]" position="after">
+        <xpath expr="//table[2]/thead/tr/th[1]" position="after">
             <th>Escuadria</th>
             <th>Length</th>
         </xpath>
-        <xpath expr="//table[@t-if='not o.move_line_ids']/tbody/tr/td[1]" position="after">
+        <xpath expr="//table[2]/tbody/tr/td[1]" position="after">
             <td>
                 <span t-field="move.escuadria"/>
             </td>
@@ -24,20 +24,20 @@
             </td>
         </xpath>
 
-        <xpath expr="//table[@t-if='not o.move_line_ids']/thead/tr/th[1]" position="before">
+        <xpath expr="//table[2]/thead/tr/th[1]" position="before">
             <th><strong>Units</strong></th>
         </xpath>
-        <xpath expr="//table[@t-if='not o.move_line_ids']/tbody/tr/td[1]" position="before">
+        <xpath expr="//table[2]/tbody/tr/td[1]" position="before">
             <td>
                 <span t-field="move.initial_demand_units" t-if="move.initial_demand_units"/>
             </td>
         </xpath>
 
-        <xpath expr="//table[@t-if='o.move_line_ids']/thead/tr/th[1]" position="after">
+        <xpath expr="//table[3]/thead/tr/th[1]" position="after">
             <th>Escuadria</th>
             <th>Length</th>
         </xpath>
-        <xpath expr="//table[@t-if='o.move_line_ids']/tbody/tr/td[1]" position="after">
+        <xpath expr="//table[3]/tbody/tr/td[1]" position="after">
             <td>
                 <span t-field="move_line.escuadria"/>
             </td>
@@ -46,10 +46,10 @@
             </td>
         </xpath>
 
-        <xpath expr="//table[@t-if='o.move_line_ids']/thead/tr/th[1]" position="before">
+        <xpath expr="//table[3]/thead/tr/th[1]" position="before">
             <th><strong>Units</strong></th>
         </xpath>
-        <xpath expr="//table[@t-if='o.move_line_ids']/tbody/tr/td[1]" position="before">
+        <xpath expr="//table[3]/tbody/tr/td[1]" position="before">
             <td>
                 <span t-field="move_line.move_id.initial_demand_units" t-if="move_line.move_id.initial_demand_units"/>
             </td>
