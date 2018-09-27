@@ -94,7 +94,6 @@ class CashForecast(models.Model):
     @api.multi
     def _get_move_line_domain(self, type, date_start, date_end):
         self.ensure_one()
-
         move_line_domain = [
             ('company_id', 'child_of', self.company_id.id),
             ('date_maturity', '<=', date_end),
@@ -128,7 +127,7 @@ class CashForecast(models.Model):
         if not prevline_id:
             bank_account_ids = self.env['account.account'].search([
                 ('user_type_id.type', '=', 'liquidity'),
-                ('company_id', '=', self.company_id.id)])
+                ('company_id', 'child_of', self.company_id.id)])
             initial_balance = self.get_balance(bank_account_ids, self.date,
                                                False)
             start_date = fields.Date.from_string(

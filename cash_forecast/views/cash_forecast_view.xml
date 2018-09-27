@@ -24,7 +24,6 @@
                 </header>
                 <sheet>
                     <div name="button_box" class="oe_right oe_button_box">
-                        <button string="Forecast Lines" class="oe_stat_button" name="view_forecasted_items" type="object" icon="fa-list"/>
                         <button string="All Payments" class="oe_stat_button" name="view_all_payment_items" type="object" icon="fa-list"/>
                     </div>
                     <group string="Cash Forecast">

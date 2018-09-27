@@ -10,7 +10,8 @@
     'license': 'AGPL-3',
     'depends': [
         'account',
-        'account_payment_order'
+        'account_payment_order',
+        'account_due_list'
     ],
     'contributors': [
         "Comunitea ",
@@ -19,6 +20,7 @@
     "data": [
         'views/cash_forecast_view.xml',
         'security/ir.model.access.csv',
+        'security/cash_forecast_security.xml'
     ],
     "installable": True
 }
