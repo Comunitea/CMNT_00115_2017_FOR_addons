@@ -12,9 +12,9 @@
     ],
     'data': [
         'views/sale_line_attribute.xml',
+        'wizard/sale_order_line_add_attributes.xml',
         'views/sale_order.xml',
         'views/account_invoice.xml',
-        'wizard/sale_order_line_add_attributes.xml',
         'security/ir.model.access.csv'
     ],
     'installable': True,
