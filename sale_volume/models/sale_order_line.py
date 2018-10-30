@@ -16,10 +16,6 @@ class SaleOrderLine(models.Model):
                                    store=True)
     product_length = fields.Float()
     ud_delivered = fields.Float()
-    attribute_ids = fields.Many2many(
-        comodel_name='sale.line.attribute',
-        string='Attributes',
-    )
 
     @api.depends('escuadria')
     def _compute_escuadria_float(self):
@@ -72,23 +68,6 @@ class SaleOrderLine(models.Model):
             res['ud_qty_ratio'] = self.product_uom_qty / self.product_uom_unit
         res['escuadria'] = self.escuadria
         res['product_length'] = self.product_length
-        res['attribute_ids'] = [(6, 0, self.attribute_ids.ids)]
-        return res
-
-    @api.multi
-    @api.onchange('product_id', 'attribute_ids')
-    def product_id_change(self):
-        res = super(SaleOrderLine, self).product_id_change()
-        if self.product_id:
-            self.name = self.product_id.name
-            attr_str = ""
-            if self.attribute_ids:
-                attr_str = " (" + ", ".join(
-                    self.attribute_ids.mapped('name')) + ")"
-            self.name += attr_str
-        else:
-            self.attribute_ids = None
-
         return res
 
     @api.multi

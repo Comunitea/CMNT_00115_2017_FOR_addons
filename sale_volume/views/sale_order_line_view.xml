@@ -15,13 +15,11 @@
                 <field name="product_uom_unit"/>
                 <field name="escuadria" attrs="{'readonly': [('state', 'not in', ('draft', 'sent'))]}"/>
                 <field name="product_length" attrs="{'readonly': [('state', 'not in', ('draft', 'sent'))]}"/>
-                <field name="attribute_ids" widget="many2many_tags"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/form//field[@name='price_unit']" position="before">
                 <field name="product_uom_unit"/>
                 <field name="escuadria" attrs="{'readonly': [('state', 'not in', ('draft', 'sent'))]}"/>
                 <field name="product_length" attrs="{'readonly': [('state', 'not in', ('draft', 'sent'))]}"/>
-                <field name="attribute_ids" widget="many2many_tags"/>
             </xpath>
         </field>
     </record>

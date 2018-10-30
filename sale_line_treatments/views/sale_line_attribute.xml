@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- © 2017 Comunitea
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+    <record model="ir.ui.view" id="sale_line_attribute_tree">
+        <field name="name">Sales attributes tree</field>
+        <field name="model">sale.line.attribute</field>
+        <field name="arch" type="xml">
+            <tree string="Sale Attributes">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="sale_line_attribute_form" model="ir.ui.view">
+        <field name="name">sale.line.attribute.view.form</field>
+        <field name="model">sale.line.attribute</field>
+        <field name="arch" type="xml">
+            <form string="Line attribute">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="unit_prices">
+                            <tree editable="bottom">
+                                <field name="price_unit"/>
+                                <field name="uom_id"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_line_attribute_action" model="ir.actions.act_window">
+        <field name="name">Sale Attributes</field>
+        <field name="res_model">sale.line.attribute</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_type">form</field>
+    </record>
+
+    <menuitem id="sale_line_attribute_menu"
+        action="sale_line_attribute_action"
+        parent="sale.menu_sale_config"
+        sequence="25" />
+
+    </odoo>

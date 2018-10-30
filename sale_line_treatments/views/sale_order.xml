@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- © 2018 Comunitea
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+    <record id="view_sale_order_add_attributes" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_volume.view_sale_order_add_volume"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_length']" position="after">
+                <field name="attribute_ids" widget="many2many_tags"/>
+                <field name="attribute_prices" invisible="1">
+                    <tree>
+                        <field name="price"/>
+                        <field name="attribute_id"/>
+                    </tree>
+                </field>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form//field[@name='product_length']" position="after">
+                <field name="attribute_ids" widget="many2many_tags"/>
+                <field name="attribute_prices" invisible="1">
+                    <tree>
+                        <field name="price"/>
+                        <field name="attribute_id"/>
+                    </tree>
+                </field>
+            </xpath>
+            <field name="order_line" position="before">
+                <button name="%(action_sale_order_line_add_attributes)d" type="action" string="Add attributes"/>
+            </field>
+
+        </field>
+    </record>
+</odoo>

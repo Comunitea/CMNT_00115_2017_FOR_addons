@@ -16,10 +16,6 @@ class AccountInvoiceLine(models.Model):
                                    store=True)
     product_length = fields.Float()
     quantity = fields.Float('')
-    attribute_ids = fields.Many2many(
-        comodel_name='sale.line.attribute',
-        string='Attributes',
-    )
     ud_qty_ratio = fields.Float(default=1)
 
     @api.model
