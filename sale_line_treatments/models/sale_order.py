@@ -22,12 +22,7 @@ class SaleOrderLine(models.Model):
     def product_id_change(self):
         res = super(SaleOrderLine, self).product_id_change()
         if self.product_id:
-            self.name = self.product_id.name
-            attr_str = ""
-            if self.attribute_ids:
-                attr_str = " (" + ", ".join(
-                    self.attribute_ids.mapped('name')) + ")"
-            self.name += attr_str
+            self.set_att_name()
         else:
             self.attribute_ids = None
         self.update_attributes_price()
@@ -39,6 +34,14 @@ class SaleOrderLine(models.Model):
         self.attribute_prices = [(2, x.id) for x in self.attribute_prices]
         self.update_attributes_price()
         return res
+
+    def set_att_name(self):
+        self.name = self.product_id.name
+        attr_str = ""
+        if self.attribute_ids:
+            attr_str = " (" + ", ".join(
+                self.attribute_ids.mapped('name')) + ")"
+            self.name += attr_str
 
     def update_attributes_price(self):
         for attribute in self.attribute_ids:

@@ -17,6 +17,16 @@ class SaleOrderLine(models.Model):
     product_length = fields.Float()
     ud_delivered = fields.Float()
 
+    def name_get(self):
+        result = []
+        for so_line in self:
+            name = '%s %s - %s - %s' % (
+                so_line.product_uom_unit, so_line.name.split('\n')[0] or
+                so_line.product_id.name, so_line.escuadria,
+                so_line.product_length)
+            result.append((so_line.id, name))
+        return result
+
     @api.depends('escuadria')
     def _compute_escuadria_float(self):
         for line in self.filtered(lambda r: r.escuadria):

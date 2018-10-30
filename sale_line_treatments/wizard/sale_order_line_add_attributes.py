@@ -8,9 +8,12 @@ class SaleOrderLineAddAttributes(models.TransientModel):
 
     attribute_list = fields.Many2many('sale.line.attribute')
     order_lines = fields.Many2many('sale.order.line')
-    order_id = fields.Many2one('sale.order', default=lambda r: r.env.context.get('active_id', False))
+    order_id = fields.Many2one(
+        'sale.order', default=lambda r: r.env.context.get('active_id', False))
 
     def set_attributes(self):
         for line in self.order_lines:
-            line.write({'attribute_ids': [(4, x.id) for x in self.attribute_list]})
+            line.write(
+                {'attribute_ids': [(4, x.id) for x in self.attribute_list]})
+            line.set_att_name()
             line.with_context(from_wiz=True).update_attributes_price()
