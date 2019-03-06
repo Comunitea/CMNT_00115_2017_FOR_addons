@@ -7,14 +7,12 @@ from odoo.tools.safe_eval import safe_eval
 
 
 class SaleOrderLine(models.Model):
-
     _inherit = 'sale.order.line'
 
-    product_uom_unit = fields.Integer('units')
-    escuadria = fields.Char('Escuadría')
-    escuadria_float = fields.Float(compute='_compute_escuadria_float',
-                                   store=True)
-    product_length = fields.Float()
+    product_uom_unit = fields.Float('units')
+    escuadria = fields.Char('Escuadría', related="product_id.escuadria")
+    escuadria_float = fields.Float(compute='_compute_escuadria_float', store=True)
+    product_length = fields.Float(related="product_id.length")
     ud_delivered = fields.Float()
 
     def name_get(self):
@@ -86,7 +84,7 @@ class SaleOrderLine(models.Model):
         Pasamos la cantidad en unidades que tendrá el nuevo movimiento
         """
         for line in self:
-            if line.state != 'sale' or not line.product_id.type in ('consu','product'):
+            if line.state != 'sale' or line.product_id.type not in ('consu', 'product'):
                 continue
             qty = 0.0
             for move in line.move_ids.filtered(lambda r: r.state != 'cancel'):

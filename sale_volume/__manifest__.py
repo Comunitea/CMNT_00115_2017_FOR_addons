@@ -18,6 +18,7 @@
     'data': [
         'views/sale_order_line_view.xml',
         'views/stock_move_view.xml',
-        'views/account_invoice.xml'
+        'views/account_invoice.xml',
+        'views/product_views.xml',
     ],
 }
