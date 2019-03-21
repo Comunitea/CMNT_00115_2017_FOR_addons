@@ -10,9 +10,9 @@ class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     product_uom_unit = fields.Float('units')
-    escuadria = fields.Char('Escuadría', related="product_id.escuadria")
+    escuadria = fields.Char('Escuadría')
     escuadria_float = fields.Float(compute='_compute_escuadria_float', store=True)
-    product_length = fields.Float(related="product_id.length")
+    product_length = fields.Float()
     ud_delivered = fields.Float()
 
     def name_get(self):
