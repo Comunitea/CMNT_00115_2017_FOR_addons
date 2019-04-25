@@ -38,7 +38,7 @@ class SaleOrderLine(models.Model):
     @api.onchange('product_uom_unit', 'escuadria', 'product_length')
     def _compute_product_uom_qty(self):
         for line in self:
-            if not line.escuadria_float and not line.product_length:
+            if not line.escuadria_float and not line.product_length :
                 line.product_uom_qty = line.product_uom_unit
             elif not line.escuadria_float and line.product_length:
                 line.product_uom_qty = line.product_uom_unit * \
@@ -47,13 +47,19 @@ class SaleOrderLine(models.Model):
                 # Puede haber casos en los que se establezca escuadria pero no longitud
                 pass
             else:
-                if line.escuadria.find('x') != -1 or line.escuadria.find(
-                        'X') != -1:
+                if line.product_uom.category_id == self.env['ir.model.data'].get_object('product', 'uom_categ_length') and line.product_length:
                     line.product_uom_qty = line.product_uom_unit * \
-                        line.escuadria_float / 10000 * line.product_length
+                    line.product_length
+                elif line.product_uom.category_id ==  self.env['ir.model.data'].get_object('product', 'product_uom_categ_unit'):
+                    line.product_uom_qty = line.product_uom_unit
                 else:
-                    line.product_uom_qty = line.product_uom_unit * \
-                        line.escuadria_float / 100 * line.product_length
+                    if line.escuadria.find('x') != -1 or line.escuadria.find(
+                            'X') != -1:
+                        line.product_uom_qty = line.product_uom_unit * \
+                            line.escuadria_float / 10000 * line.product_length
+                    else:
+                        line.product_uom_qty = line.product_uom_unit * \
+                            line.escuadria_float / 100 * line.product_length
 
     def _prepare_procurement_values(self, group_id=False):
         res = super(SaleOrderLine, self)._prepare_procurement_values(group_id)
