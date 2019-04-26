@@ -9,5 +9,5 @@ from odoo.tools.safe_eval import safe_eval
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    forewarned = fields.Boolean('Forewarned')
-    done = fields.Boolean('Done')
+    forewarned = fields.Boolean('Forewarned', default=False)
+    done = fields.Boolean('Done', default=False)
