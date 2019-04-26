@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-25 16:13+0000\n"
-"PO-Revision-Date: 2019-04-25 16:13+0000\n"
+"POT-Creation-Date: 2019-04-26 05:45+0000\n"
+"PO-Revision-Date: 2019-04-26 05:45+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -82,7 +82,7 @@ msgstr "Transferencia inmediata"
 #. module: sale_volume
 #: model:ir.model.fields,field_description:sale_volume.field_stock_move_initial_demand_units
 msgid "Initial Demand Units"
-msgstr "Unidades pedidas"
+msgstr "Unidades iniciales"
 
 #. module: sale_volume
 #: model:ir.model,name:sale_volume.model_account_invoice_line
@@ -140,7 +140,7 @@ msgstr "Ctdad. Hecha manual"
 #. module: sale_volume
 #: model:ir.model,name:sale_volume.model_sale_order
 msgid "Quotation"
-msgstr "Presupuesto"
+msgstr "Quotation"
 
 #. module: sale_volume
 #: model:ir.model,name:sale_volume.model_sale_order_line
@@ -163,6 +163,12 @@ msgstr "Unidades Entregadas"
 #: model:ir.model.fields,field_description:sale_volume.field_stock_move_ud_qty_ratio
 msgid "Ud Qty Ratio"
 msgstr "Ud Qty Ratio"
+
+#. module: sale_volume
+#: model:ir.model.fields,field_description:sale_volume.field_stock_move_line_product_uom_unit
+#: model:ir.model.fields,field_description:sale_volume.field_stock_move_product_uom_unit
+msgid "Units Done"
+msgstr "Unidades que se retiran"
 
 #. module: sale_volume
 #: model:ir.model.fields,field_description:sale_volume.field_stock_move_line_escuadria_float
@@ -188,8 +194,3 @@ msgstr "sale.line.attribute"
 msgid "units"
 msgstr "Unidades pedidas"
 
-#. module: sale_volume
-#: model:ir.model.fields,field_description:sale_volume.field_stock_move_line_product_uom_unit
-#: model:ir.model.fields,field_description:sale_volume.field_stock_move_product_uom_unit
-msgid "units"
-msgstr "Unidades retiradas"

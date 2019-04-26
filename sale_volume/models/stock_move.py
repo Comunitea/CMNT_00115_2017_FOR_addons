@@ -12,7 +12,7 @@ class StockMove(models.Model):
 
     name = fields.Text('Description', index=True, required=True)
     product_uom_unit = fields.Integer(
-        'units', compute='_compute_product_uom_unit',
+        'Units Done', compute='_compute_product_uom_unit',
         inverse='_inverse_product_uom_unit')
     initial_demand_units = fields.Integer(readonly=True)
     escuadria = fields.Char('Escuadría', readonly=True)
