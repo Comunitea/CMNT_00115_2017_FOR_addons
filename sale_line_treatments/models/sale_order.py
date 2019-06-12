@@ -13,14 +13,14 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _prepare_invoice_line(self, qty):
-        res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
+        res = super()._prepare_invoice_line(qty)
         res['attribute_ids'] = [(6, 0, self.attribute_ids.ids)]
         return res
 
     @api.multi
     @api.onchange('product_id', 'attribute_ids')
     def product_id_change(self):
-        res = super(SaleOrderLine, self).product_id_change()
+        res = super().product_id_change()
         if self.product_id:
             self.set_att_name()
         else:
@@ -30,7 +30,7 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):
-        res = super(SaleOrderLine, self).product_uom_change()
+        res = super().product_uom_change()
         self.attribute_prices = [(2, x.id) for x in self.attribute_prices]
         self.update_attributes_price()
         return res
@@ -58,12 +58,13 @@ class SaleOrderLine(models.Model):
                 else:
                     self.attribute_prices.new(attribute_dict)
             else:
-                created_price.price = price
+                if created_price.price != price:
+                    created_price.price = price
         # Se ha elminado alguna etiqueta
         if self.mapped('attribute_prices.attribute_id') - self.attribute_ids:
             list_ = [(2, x.id) for x in self.attribute_prices.filtered(
                      lambda r: r.attribute_id not in self.attribute_ids)]
-            list_ = [(6, 0, [x.id for x in self.attribute_prices.filtered(
+            list_ += [(6, 0, [x.id for x in self.attribute_prices.filtered(
                      lambda r: r.attribute_id in self.attribute_ids)])]
             self.update({'attribute_prices': list_})
         new_price = sum(self.mapped('attribute_prices.price'))

@@ -1,7 +1,7 @@
 # © 2017 Comunitea
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import models, fields, api, _
+from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
 
@@ -25,14 +25,14 @@ class AccountInvoiceLine(models.Model):
             unidades. Si viene de un pedido de venta simplemente usaremos
             el ud_qty_ratio.
         '''
-        line = super(AccountInvoiceLine, self).create(vals)
+        line = super().create(vals)
         if self._context.get('from_so', False):
             if vals.get('ud_qty_ratio') == 0 or not vals.get(
                     'ud_qty_ratio', False):
                 line.product_uom_unit = 0
             else:
-                line.product_uom_unit = round(vals.get('quantity') /
-                    vals.get('ud_qty_ratio'))
+                line.product_uom_unit = round(
+                    vals.get('quantity') / vals.get('ud_qty_ratio'))
         return line
 
     @api.depends('escuadria')
@@ -54,7 +54,8 @@ class AccountInvoiceLine(models.Model):
                 line.quantity = line.product_uom_unit * \
                     line.product_length
             elif not line.product_length:
-                # Puede haber casos en los que se establezca escuadria pero no longitud
+                # Puede haber casos en los que se establezca
+                # escuadria pero no longitud
                 pass
             else:
                 if line.escuadria.find('x') != -1 or line.escuadria.find(

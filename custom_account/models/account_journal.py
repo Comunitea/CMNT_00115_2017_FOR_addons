@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # © 2018 Comunitea
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
@@ -13,7 +12,7 @@ class AccountJournal(models.Model):
     @api.multi
     def get_journal_dashboard_datas(self):
         currency = self.currency_id or self.company_id.currency_id
-        res = super(AccountJournal, self).get_journal_dashboard_datas()
+        res = super().get_journal_dashboard_datas()
         journals = self.env['account.journal'].sudo().search(
             [('type', '=', self.type)])
         total_last_balance = 0.0

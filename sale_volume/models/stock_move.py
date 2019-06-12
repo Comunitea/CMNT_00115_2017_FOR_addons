@@ -25,7 +25,8 @@ class StockMove(models.Model):
     def _compute_ud_qty_ratio(self):
         for move in self:
             if move.initial_demand_units:
-                move.ud_qty_ratio = move.product_uom_qty / move.initial_demand_units
+                move.ud_qty_ratio = move.product_uom_qty / \
+                    move.initial_demand_units
 
     @api.depends('escuadria')
     def _compute_escuadria_float(self):
@@ -60,19 +61,21 @@ class StockMove(models.Model):
                                   " lines."))
 
     def _merge_moves_fields(self):
-        res = super(StockMove, self)._merge_moves_fields()
+        res = super()._merge_moves_fields()
         res['initial_demand_units'] = sum(self.mapped('initial_demand_units'))
         return res
 
     @api.multi
     def copy(self, default={}):
-        if 'initial_demand_units' not in default and 'product_uom_qty' in default:
-            default['initial_demand_units'] = default['product_uom_qty'] / self.ud_qty_ratio
-        return super(StockMove, self).copy(default)
+        if 'initial_demand_units' not in default and \
+                'product_uom_qty' in default:
+            default['initial_demand_units'] = default['product_uom_qty'] / \
+                self.ud_qty_ratio
+        return super().copy(default)
 
     def _action_done(self):
-        result = super(StockMove, self)._action_done()
-        for move in self:
+        result = super()._action_done()
+        for move in result:
             move.initial_demand_units = move.product_uom_unit
         for line in result.mapped('sale_line_id').sudo():
             line.ud_delivered = line._get_delivered_ud()
@@ -80,12 +83,14 @@ class StockMove(models.Model):
 
     @api.multi
     def write(self, vals):
-        res = super(StockMove, self).write(vals)
+        res = super().write(vals)
         if 'product_uom_qty' in vals:
             for move in self:
                 if move.state == 'done':
                     sale_order_lines = self.filtered(
-                        lambda move: move.sale_line_id and move.product_id.expense_policy == 'no').mapped('sale_line_id')
+                        lambda move: move.sale_line_id and
+                        move.product_id.expense_policy == 'no').mapped(
+                            'sale_line_id')
                     for line in sale_order_lines.sudo():
                         line.ud_delivered = line._get_delivered_ud()
         return res

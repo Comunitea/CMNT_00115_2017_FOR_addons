@@ -2,9 +2,8 @@
 # License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
 
 import calendar
-from odoo import fields, models, api, exceptions, _
+from odoo import fields, models, api
 from dateutil.relativedelta import relativedelta
-
 
 
 class CashForecast(models.Model):
@@ -14,9 +13,8 @@ class CashForecast(models.Model):
     name = fields.Char('Name', required=True)
     periods = fields.Integer('Number of Periods')
     period_type = fields.Selection(
-        selection =[('month', 'Month'),
-            ('week', 'Week'),
-        ], string='Type of period', default='month')
+        selection=[('month', 'Month'), ('week', 'Week')],
+        string='Type of period', default='month')
     date = fields.Date('Calculation Date', readonly=True)
     company_id = fields.Many2one(
         'res.company',
@@ -36,8 +34,7 @@ class CashForecast(models.Model):
     )
     previous_outputs = fields.Float('Overdue Outputs', readonly=True,
                                     copy=False,
-                                    compute = '_compute_previous_outputs'
-    )
+                                    compute='_compute_previous_outputs')
     previous_output_ids = fields.Many2many(
         comodel_name='account.move.line', string=' Overdue Journal items',
         relation='cash_forecast_previous_output_rel', readonly=True, copy=False
@@ -47,7 +44,6 @@ class CashForecast(models.Model):
                                     compute='_compute_previous_balance')
     cash_line_ids = fields.One2many('cash.forecast.line', 'forecast_id',
                                     readonly=True, copy=False)
-
 
     @api.multi
     def delete_forecast_lines(self):
@@ -59,7 +55,7 @@ class CashForecast(models.Model):
     @api.multi
     def unlink(self):
         self.delete_forecast_lines()
-        res = super(CashForecast, self).unlink()
+        res = super().unlink()
         return res
 
     def get_balance(self, account_ids, date_ini, date_end):
@@ -107,10 +103,9 @@ class CashForecast(models.Model):
             move_line_domain.append(
                 ('account_id.internal_type', 'in', ('receivable', ))
             )
-        elif type== 'output':
+        elif type == 'output':
             move_line_domain.append(
                 ('account_id.internal_type', 'in', ('payable',)))
-
 
         return move_line_domain
 
@@ -120,7 +115,6 @@ class CashForecast(models.Model):
         domain = self._get_move_line_domain(
             type, date_start, date_end)
         return self.env['account.move.line'].search(domain)
-
 
     def _get_cash_forecast_line_vals(self, iter, prevline_id):
 
@@ -134,8 +128,8 @@ class CashForecast(models.Model):
                         self.date)
         else:
             initial_balance = prevline_id.final_balance
-            start_date =  fields.Date.from_string(prevline_id.end_date) + \
-                          relativedelta(days=+1)
+            start_date = fields.Date.from_string(prevline_id.end_date) + \
+                relativedelta(days=+1)
         if self.period_type == 'month':
             last_month_day = calendar.monthrange(start_date.year,
                                                  start_date.month)[1]
@@ -150,7 +144,7 @@ class CashForecast(models.Model):
         output_ids = self._get_move_lines('output', start_date, end_date)
         outputs = sum(output_ids.mapped('amount_residual'))
         period_balance = inputs + outputs
-        final_balance = initial_balance  + period_balance
+        final_balance = initial_balance + period_balance
         vals = {
             'month': start_date.month,
             'start_date': start_date,
@@ -158,7 +152,7 @@ class CashForecast(models.Model):
             'initial_balance': initial_balance,
             'inputs': inputs,
             'outputs': outputs,
-            'input_ids':[(6, 0, input_ids.ids)],
+            'input_ids': [(6, 0, input_ids.ids)],
             'output_ids': [(6, 0, output_ids.ids)],
             'period_balance': period_balance,
             'final_balance': final_balance,
@@ -172,8 +166,7 @@ class CashForecast(models.Model):
         self.date = fields.Date.today()
         prev_line = None
         previous_date = fields.Date.from_string(
-            self.date) + \
-                        relativedelta(days=-1)
+            self.date) + relativedelta(days=-1)
         previous_input_ids = self._get_move_lines('input', False,
                                                   previous_date)
         previous_output_ids = self._get_move_lines('output', False,
@@ -202,8 +195,8 @@ class CashForecast(models.Model):
     @api.depends('previous_output_ids')
     def _compute_previous_outputs(self):
         for forecast in self:
-            forecast.previous_outputs = sum(forecast.previous_output_ids.mapped(
-                'amount_residual'))
+            forecast.previous_outputs = sum(
+                forecast.previous_output_ids.mapped('amount_residual'))
 
     @api.multi
     @api.depends('previous_outputs', 'previous_inputs')
@@ -211,8 +204,6 @@ class CashForecast(models.Model):
         for forecast in self:
             forecast.previous_balance = forecast.previous_inputs + \
                                         forecast.previous_outputs
-
-
 
     def get_calculated_previous_inputs(self):
         res = self.env.ref('account_due_list.action_invoice_payments').read()[0]
@@ -239,14 +230,11 @@ class CashForecast(models.Model):
         return res
 
 
-
-
-
 class CashForecastLine(models.Model):
 
     _name = "cash.forecast.line"
-    prev_line_id = fields.Many2one('cash.forecast.line', 'Previous Line',
-                                  readonly=True)
+    prev_line_id = fields.Many2one(
+        'cash.forecast.line', 'Previous Line', readonly=True)
     month = fields.Integer('Month')
     forecast_id = fields.Many2one('cash.forecast', 'Forecast',
                                   readonly=True)
