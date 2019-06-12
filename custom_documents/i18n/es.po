@@ -59,3 +59,8 @@ msgstr "NIF:"
 #: model:ir.model,name:custom_documents.model_ir_qweb_field_contact
 msgid "ir.qweb.field.contact"
 msgstr "ir.qweb.field.contact"
+
+#. module: custom_documents
+#: model:ir.ui.view,arch_db:custom_documents.custom_contact
+msgid "Phone:"
+msgstr "Tel:"

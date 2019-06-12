@@ -14,7 +14,7 @@ class SaleOrderLine(models.Model):
     escuadria_float = fields.Float(
         compute='_compute_escuadria_float', store=True)
     product_length = fields.Float()
-    ud_delivered = fields.Float()
+    ud_delivered = fields.Float(copy=False)
 
     def name_get(self):
         result = []

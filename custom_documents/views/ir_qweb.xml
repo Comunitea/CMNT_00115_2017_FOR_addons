@@ -7,7 +7,11 @@
         <xpath expr="//t[@t-call='base.contact_name']/.." position="after">
             <div t-if="vat and 'vat' in fields">
                 VAT: <span itemprop="vat" t-esc="vat"/>
+
             </div>
+        </xpath>
+        <xpath expr="//span[@t-esc='phone']" position="before">
+            Phone:
         </xpath>
     </template>
 
