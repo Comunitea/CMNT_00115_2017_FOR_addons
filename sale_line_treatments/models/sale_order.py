@@ -18,15 +18,19 @@ class SaleOrderLine(models.Model):
         return res
 
     @api.multi
-    @api.onchange('product_id', 'attribute_ids')
+    @api.onchange('product_id')
     def product_id_change(self):
         res = super().product_id_change()
         if self.product_id:
             self.set_att_name()
         else:
             self.attribute_ids = None
-        self.update_attributes_price()
         return res
+
+    @api.onchange('attribute_ids')
+    def attribute_ids_change(self):
+        if self.product_id:
+            self.update_attributes_price()
 
     @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):
@@ -44,6 +48,7 @@ class SaleOrderLine(models.Model):
             self.name += attr_str
 
     def update_attributes_price(self):
+        self.price_unit -= sum([x.price for x in self.attribute_prices])
         for attribute in self.attribute_ids:
             created_price = self.attribute_prices.filtered(
                 lambda r: r.attribute_id.id == attribute.id)
@@ -63,7 +68,7 @@ class SaleOrderLine(models.Model):
         # Se ha elminado alguna etiqueta
         if self.mapped('attribute_prices.attribute_id') - self.attribute_ids:
             list_ = [(2, x.id) for x in self.attribute_prices.filtered(
-                     lambda r: r.attribute_id not in self.attribute_ids)]
+                lambda r: r.attribute_id not in self.attribute_ids)]
             list_ += [(6, 0, [x.id for x in self.attribute_prices.filtered(
                      lambda r: r.attribute_id in self.attribute_ids)])]
             self.update({'attribute_prices': list_})
