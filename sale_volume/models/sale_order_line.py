@@ -12,7 +12,7 @@ class SaleOrderLine(models.Model):
     product_uom_unit = fields.Float('units')
     escuadria = fields.Char('Escuadría', related="product_id.escuadria")
     escuadria_float = fields.Float(compute='_compute_escuadria_float', store=True)
-    product_length = fields.Float(related="product_id.length")
+    product_length = fields.Float()
     ud_delivered = fields.Float()
 
     def name_get(self):
@@ -38,9 +38,9 @@ class SaleOrderLine(models.Model):
     @api.onchange('product_uom_unit', 'escuadria', 'product_length')
     def _compute_product_uom_qty(self):
         for line in self:
-            if not line.escuadria_float and not line.product_length:
+            if not line.escuadria and not line.product_length:
                 line.product_uom_qty = line.product_uom_unit
-            elif not line.escuadria_float and line.product_length:
+            elif not line.escuadria and line.product_length:
                 line.product_uom_qty = line.product_uom_unit * \
                     line.product_length
             elif not line.product_length:
