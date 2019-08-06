@@ -30,6 +30,7 @@ class SaleOrderLine(models.Model):
     @api.onchange('attribute_ids')
     def attribute_ids_change(self):
         if self.product_id:
+            self.set_att_name()
             self.update_attributes_price()
 
     @api.onchange('product_uom', 'product_uom_qty')
