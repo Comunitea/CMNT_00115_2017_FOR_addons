@@ -1,14 +1,12 @@
-# -*- coding: utf-8 -*-
 # © 2018 Comunitea
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import models, fields, api, exceptions, _
+from odoo import models
 
 
 class AccountPaymentMode(models.Model):
 
     _inherit = 'account.payment.mode'
-
 
     def get_bank_strings(self):
         if not self:

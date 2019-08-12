@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # © 2018 Comunitea
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
@@ -15,8 +14,9 @@ class IrQwebFieldContact(models.AbstractModel):
         if not value.exists():
             return False
 
-        opf = options and options.get('fields') or ["name", "address", "phone", "mobile", "email"]
-        val = super(IrQwebFieldContact, self).value_to_html(value, options)
+        opf = options and options.get('fields') or \
+            ["name", "address", "phone", "mobile", "email"]
+        val = super().value_to_html(value, options)
         value = value.sudo().with_context(show_address=True)
         name_get = value.name_get()[0][1]
         val = {

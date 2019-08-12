@@ -8,18 +8,46 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='order_line']/tree/field[@name='qty_delivered']" position="after">
-                <field name="ud_delivered" attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
+            <xpath expr="//field[@name='confirmation_date']" position="before">
+                <field name="done" />
+                <field name="forewarned" />
             </xpath>
             <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']" position="before">
                 <field name="product_uom_unit"/>
+                <field name="ud_delivered" attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
                 <field name="escuadria" attrs="{'readonly': [('state', 'not in', ('draft', 'sent'))]}"/>
                 <field name="product_length" attrs="{'readonly': [('state', 'not in', ('draft', 'sent'))]}"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/form//field[@name='price_unit']" position="before">
                 <field name="product_uom_unit"/>
+                <field name="ud_delivered" attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
                 <field name="escuadria" attrs="{'readonly': [('state', 'not in', ('draft', 'sent'))]}"/>
                 <field name="product_length" attrs="{'readonly': [('state', 'not in', ('draft', 'sent'))]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sale_order_tree_add_volume" model="ir.ui.view">
+        <field name="name">sale.order.tee.booleansform</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_total']" position="after">
+                <field name="done" />
+                <field name="forewarned" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sale_order_search_booleans" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='my_sale_orders_filter']" position="before">
+                <filter string="Done" domain="[('done','=', True)]" name="sale_order_done"/>
+                <filter string="Forewarned" domain="[('forewarned','=', True)]" name="sale_order_forewarned"/>
+                <separator/>
             </xpath>
         </field>
     </record>

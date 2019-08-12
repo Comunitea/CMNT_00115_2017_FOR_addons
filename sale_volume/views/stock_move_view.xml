@@ -14,12 +14,12 @@
             </xpath>
             <xpath expr="//field[@name='move_lines']/tree/field[@name='product_uom_qty']" position="before">
                 <field name="initial_demand_units"/>
+                <field name="product_uom_unit"/>
             </xpath>
             <xpath expr="//field[@name='move_lines']/tree/field[@name='quantity_done']" position="attributes">
                 <attribute name="attrs">{'readonly': [('initial_demand_units', '!=', 0)]}</attribute>
             </xpath>
             <xpath expr="//field[@name='move_lines']/tree/field[@name='quantity_done']" position="before">
-                <field name="product_uom_unit"/>
                 <field name="escuadria"/>
                 <field name="product_length"/>
             </xpath>

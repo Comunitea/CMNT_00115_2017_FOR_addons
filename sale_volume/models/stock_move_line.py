@@ -1,14 +1,14 @@
 # © 2017 Comunitea
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import models, fields, api
+from odoo import models, fields, api
 
 
 class StockMoveLine(models.Model):
 
     _inherit = 'stock.move.line'
 
-    product_uom_unit = fields.Integer('units')
+    product_uom_unit = fields.Integer('Units Done')
     escuadria = fields.Char('Escuadría', related='move_id.escuadria',
                             readonly=True)
     escuadria_float = fields.Float(
@@ -33,7 +33,8 @@ class StockMoveLine(models.Model):
     def _compute_qty_done(self):
         for move_line in self:
             if move_line.ud_qty_ratio:
-                move_line.qty_done = move_line.move_id.product_uom_unit * move_line.ud_qty_ratio
+                move_line.qty_done = move_line.move_id.product_uom_unit * \
+                    move_line.ud_qty_ratio
             else:
                 # se ejecuta antes compute que set
                 if move_line.move_id.quantity_done:

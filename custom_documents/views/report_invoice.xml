@@ -37,10 +37,10 @@
             <td>
             </td>
         </xpath>
-        <xpath expr="//span[@t-field='o.comment']/..">
+        <!-- <xpath expr="//span[@t-field='o.comment']/..">
             <p t-if="o.partner_bank_id">
                 <span t-field="o.partner_bank_id.bank_id.name"/>: <span t-field="o.partner_bank_id.acc_number"/>
             </p>
-        </xpath>
+        </xpath> -->
     </template>
 </odoo>
