@@ -57,7 +57,7 @@ class BiometricData(models.Model):
 
     name = fields.Char('Name')
     ip_address = fields.Char('Ip address')
-    port = fields.Integer('Port')
+    port = fields.Integer('Port', default=4270)
     sequence = fields.Integer('Sequence')
     timezone = fields.Selection(
         _tz_get, 'Timezone', size=64,
@@ -77,6 +77,9 @@ class BiometricData(models.Model):
         [('sec', 'Sec(s)'), ('min', 'Min(s)'),
          ('hour', 'Hour(s)'), ('days', 'Day(s)'), ],
         'Max allowed time', help='Max allowed time between two registers',)
+    mode = fields.Selection(
+        [('manual', 'Manual'), ('auto', 'Auto')], 'Mode', 
+        default='auto', required=True)
 
     @api.model
     def get_users(self):
@@ -132,7 +135,8 @@ class BiometricData(models.Model):
                 if a.action_perform != b.action_perform:
                     continue
                 if abs(a.timestamp - b.timestamp) < self.min_time:
-                    user_attendances.remove(a)
+                    if a in user_attendances:
+                        user_attendances.remove(a)
         return attendaces
 
 

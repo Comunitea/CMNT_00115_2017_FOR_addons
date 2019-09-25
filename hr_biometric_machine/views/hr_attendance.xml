@@ -28,7 +28,7 @@
                     <field name="state" invisible="0"/>
                 </field>
                 <xpath expr="//tree" position="attributes">
-                    <attribute name="colors">red:state=='fix'</attribute>
+                    <attribute name="decoration-danger">state=='fix'</attribute>
                 </xpath>
             </field>
         </record>

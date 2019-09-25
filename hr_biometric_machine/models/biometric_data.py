@@ -54,6 +54,8 @@ class BiometricData(models.Model):
         biometric_machine_obj = self.env['biometric.machine']
         biometric_machine = biometric_machine_obj.browse(biometric_id)
 
+        mode = biometric_machine.mode
+
         def convert_date_to_utc(date):
             local = pytz.timezone(
                 biometric_machine.timezone,)
@@ -72,6 +74,8 @@ class BiometricData(models.Model):
 
         # Get the max time of working set up for the device
         max_time = biometric_machine.max_time
+        min_time = biometric_machine.min_time
+
         # Get a delta time of 1 minute
         delta_1_minute = datetime.timedelta(minutes=1)
         # Get previous attendace
@@ -82,37 +86,42 @@ class BiometricData(models.Model):
              ], limit=1, order='check_in DESC',)
         # Get date of the last user register
         if not prev_att:
-            employee_date = date
+            last_date = date
         else:
-            employee_date = datetime.datetime.strptime(
+            last_date = datetime.datetime.strptime(
                 prev_att.check_in, '%Y-%m-%d %H:%M:%S',)
-        employee_date = convert_from_local_to_utc(employee_date)
+            last_date = convert_from_local_to_utc(last_date)
+            if date <= last_date:
+                return
+        
+        # Si la diferencia con el último registro es menor que el tiempo mínimo
+        # no creo registro de asistencia
+        if prev_att and abs(last_date - date) < min_time:
+            return
 
-        # CMNT: Hago yo el calculo del sign in y el sign out ignorando el que
-        # le llega
-        action_perform == 'sign_in'
-        if prev_att and not prev_att.check_out:
-            action_perform = 'sign_out'
 
-        if action_perform == 'sign_in':
-            if prev_att and not prev_att.check_out:
-                if abs(employee_date - date) >= max_time:
-                    new_time = employee_date + max_time
-                    self.create_hr_attendace(
-                        employee_id, new_time, 'sign_out',
-                        biometric_id, state='fix',)
-                else:
-                    new_time = date - delta_1_minute
-                    self.create_hr_attendace(
-                        employee_id, new_time, 'sign_out',
-                        biometric_id, state='fix',)
-        else:
-            if (not prev_att or prev_att.check_out or
-                    abs(employee_date - date) > max_time):
-                new_time = date - delta_1_minute
-                self.create_hr_attendace(
-                    employee_id, new_time, 'sign_in',
-                    biometric_id, state='fix',)
+        prev_att_action = 'sign_in'
+        if prev_att.check_out:
+            prev_att_action = 'sign_out'
+
+        if mode == 'auto':
+            action_perform = 'sign_in'
+            if prev_att and prev_att_action == 'sign_in':
+                action_perform = 'sign_out'
+
+        # Modo manual, puede que cree fix
+        elif prev_att and prev_att_action == action_perform:
+            sign_state = \
+                'sign_in' if prev_att_action == 'sign_out' else 'sign_out'
+            if abs(last_date - date) >= max_time:
+                new_time = last_date + max_time
+            else:
+                new_time = last_date + delta_1_sec
+            new_time = convert_date_to_utc(new_time)
+            if sign_state == 'sign_in':
+                self._create_hr_attendace(employee_id, new_time, 'fix')
+            else:
+                self._write_hr_attendace(employee_id, prev_att, new_time, 'fix')
 
         # Convert date using correct timezone
         date = convert_date_to_utc(date)
@@ -163,8 +172,9 @@ class BiometricData(models.Model):
             # Sorted elements using timestamp
             user_attendances.sort(key=lambda x: x.timestamp)
             user = biometric_user_obj.search([
-                    ['biometric_id', '=', int(
-                        user_attendances[0].user_id), ], ], )
+                    ('biometric_id', '=', int(
+                        user_attendances[0].user_id)),
+                    ('biometric_device', '=', biometric_machine.id)])
             for attendance in user_attendances:
                 if not attendance.action_perform:
                     continue
