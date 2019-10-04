@@ -55,7 +55,6 @@ class BiometricData(models.Model):
         biometric_machine = biometric_machine_obj.browse(biometric_id)
 
         mode = biometric_machine.mode
-
         def convert_date_to_utc(date):
             local = pytz.timezone(
                 biometric_machine.timezone,)
@@ -75,56 +74,69 @@ class BiometricData(models.Model):
         # Get the max time of working set up for the device
         max_time = biometric_machine.max_time
         min_time = biometric_machine.min_time
-
-        # Get a delta time of 1 minute
-        delta_1_minute = datetime.timedelta(minutes=1)
+       
         # Get previous attendace
         prev_att = hr_attendance_obj.search(
             [
                 ('employee_id', '=', employee_id),
                 ('check_in', '<', convert_date_to_utc(date).isoformat()),
              ], limit=1, order='check_in DESC',)
+
         # Get date of the last user register
         if not prev_att:
             last_date = date
         else:
+            prev_att_action = 'sign_in'
+            if prev_att.check_out:
+                prev_att_action = 'sign_out'
+           
+            previous_date = prev_att.check_in
+            if prev_att_action == 'sign_out':
+                previous_date = prev_att.check_out
             last_date = datetime.datetime.strptime(
-                prev_att.check_in, '%Y-%m-%d %H:%M:%S',)
+                previous_date, '%Y-%m-%d %H:%M:%S',)
             last_date = convert_from_local_to_utc(last_date)
-            if date <= last_date:
-                return
         
+    
+        if prev_att and date <= last_date:
+            return
+    
         # Si la diferencia con el último registro es menor que el tiempo mínimo
         # no creo registro de asistencia
-        if prev_att and abs(last_date - date) < min_time:
+        if min_time and prev_att and abs(last_date - date) <= min_time:
             return
 
-
-        prev_att_action = 'sign_in'
-        if prev_att.check_out:
-            prev_att_action = 'sign_out'
 
         if mode == 'auto':
             action_perform = 'sign_in'
             if prev_att and prev_att_action == 'sign_in':
                 action_perform = 'sign_out'
 
+
         # Modo manual, puede que cree fix
         elif prev_att and prev_att_action == action_perform:
             sign_state = \
                 'sign_in' if prev_att_action == 'sign_out' else 'sign_out'
-            if abs(last_date - date) >= max_time:
+            if max_time and abs(last_date - date) >= max_time:
                 new_time = last_date + max_time
             else:
+                # Get a delta time of 1 second
+                delta_1_sec = datetime.timedelta(seconds=1)
+                # delta_1_minute = datetime.timedelta(minutes=1)
                 new_time = last_date + delta_1_sec
+
             new_time = convert_date_to_utc(new_time)
             if sign_state == 'sign_in':
-                self._create_hr_attendace(employee_id, new_time, 'fix')
+                fix_a = self._create_hr_attendace(employee_id, new_time, 'fix')
+                prev_att = fix_a  # New previous record
+                state = 'fix'  # new state
             else:
                 self._write_hr_attendace(employee_id, prev_att, new_time, 'fix')
 
         # Convert date using correct timezone
         date = convert_date_to_utc(date)
+
+        # Create de attendance from the dispositive
         if action_perform == 'sign_in':
             self._create_hr_attendace(employee_id, date, state)
         else:
@@ -134,11 +146,12 @@ class BiometricData(models.Model):
     def _create_hr_attendace(
             self, employee_id, date, state,):
         hr_attendance_obj = self.env['hr.attendance']
-        hr_attendance_obj.create(
+        created = hr_attendance_obj.create(
             {'employee_id': employee_id,
              'check_in': date.strftime('%Y-%m-%d: %H:%M:%S'),
              'state': state, }
         )
+        return created
 
     @api.model
     def _write_hr_attendace(self, employee_id, prev_att, date, state):

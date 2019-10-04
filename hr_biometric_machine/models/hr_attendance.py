@@ -7,7 +7,8 @@ from openerp import api, fields, models
 
 
 class HrAttendance(models.Model):
-    _inherit = 'hr.attendance'
+    _name = 'hr.attendance'
+    _inherit = ['hr.attendance', 'mail.thread']
     
     @api.one
     def fix_register(self):
