@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="situation_report">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <t t-if="docs.include_orders and docs.sale_order_ids">
+                        <center><h2>Pedidos de venta</h2></center>
+                        <t t-foreach="docs.sale_order_ids" t-as="order">
+                            <div style="page-break-inside:avoid;">
+                                <table class="table table-condensed">
+                                    <tbody>
+                                        <tr>
+                                            <td><span t-field="order.partner_id.name"/></td>
+                                            <td><span t-field="order.company_id.company_abreviation"/></td>
+                                            <td><span t-field="order.name"/></td>
+                                            <td><span t-field="order.amount_untaxed" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="table table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th>Fecha confirmación</th>
+                                            <th>Fecha solicitada</th>
+                                            <th>Hecho</th>
+                                            <th>avisado</th>
+                                            <th>Estado de pedido</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><span t-field="order.confirmation_date" t-options='{"widget": "date"}'/></td>
+                                            <td><span t-field="order.requested_date"  t-options='{"widget": "date"}'/></td>
+                                            <td><span t-esc="order.done and 'X' or ''"/></td>
+                                            <td><span t-esc="order.forewarned and 'X' or ''"/></td>
+                                            <td><span t-field="order.invoice_status"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="7">
+                                                <table class="table table-condensed">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Descripcion</th>
+                                                            <th t-if="any([x.product_uom_unit for x in order.order_line])">Ud</th>
+                                                            <th t-if="any([x.ud_delivered for x in order.order_line])">Ud Entr.</th>
+                                                            <th t-if="any([x.escuadria for x in order.order_line])">Escu</th>
+                                                            <th t-if="any([x.product_length for x in order.order_line])">Largo</th>
+                                                            <th> ctdad ped.</th>
+                                                            <th t-if="any([x.qty_delivered for x in order.order_line])">ctdad ent.</th>
+                                                            <th t-if="any([x.qty_invoiced for x in order.order_line])">ctdad fact.</th>
+                                                            <th>UdM</th>
+                                                            <th>prec. unit.</th>
+                                                            <th t-if="any([x.discount for x in order.order_line])">Desc.</th>
+                                                            <th>subtotal</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr t-foreach="order.order_line" t-as="line">
+                                                            <td><span t-field="line.name"/></td>
+                                                            <td t-if="any([x.product_uom_unit for x in order.order_line])"><span t-field="line.product_uom_unit"/></td>
+                                                            <td t-if="any([x.ud_delivered for x in order.order_line])"><span t-field="line.ud_delivered"/></td>
+                                                            <td t-if="any([x.escuadria for x in order.order_line])"><span t-field="line.escuadria"/></td>
+                                                            <td t-if="any([x.product_length for x in order.order_line])"><span t-field="line.product_length"/></td>
+                                                            <td><span t-field="line.product_uom_qty"/></td>
+                                                            <td t-if="any([x.qty_delivered for x in order.order_line])"><span t-field="line.qty_delivered"/></td>
+                                                            <td t-if="any([x.qty_invoiced for x in order.order_line])"><span t-field="line.qty_invoiced"/></td>
+                                                            <td><span t-field="line.product_uom"/></td>
+                                                            <td><span t-field="line.price_unit"/></td>
+                                                            <td t-if="any([x.discount for x in order.order_line])"><span t-field="line.discount"/></td>
+                                                            <td><span t-field="line.price_subtotal"/></td>
+
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </t>
+                    </t>
+                    <t t-if="docs.include_bank_movements and docs.get_bank_datas()">
+                        <center><h2>Movimientos bancarios</h2></center>
+                        <t t-set="bank_dict" t-value="docs.get_bank_datas()"/>
+                        <center><h3>Efectivo</h3></center>
+                        <t t-foreach="bank_dict['cash'].keys()" t-as="company">
+                                <center><h5><spant t-field="company.company_abreviation"/></h5></center>
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Descripción</th>
+                                        <th  class="text-right">Cantidad</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="bank_dict['cash'][company]" t-as="line">
+                                        <td style="width: 12%"><span t-field="line.date"/></td>
+                                        <td style="width: 68%"><span t-field="line.name"/></td>
+                                        <td style="width: 20%" class="text-right"><span t-field="line.amount"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+                        <center><h3>Banco</h3></center>
+                        <t t-foreach="bank_dict.keys()" t-as="company">
+                            <t t-if="company != 'cash'">
+                                    <center><h5><spant t-field="company.company_abreviation"/></h5></center>
+                                <t t-foreach="bank_dict[company].keys()" t-as="journal">
+                                    <center><h5><span t-esc="journal.name"/></h5></center>
+                                    <table class="table table-condensed">
+                                        <thead>
+                                            <tr>
+                                                <th>Fecha</th>
+                                                <th>Descripción</th>
+                                                <th  class="text-right">Cantidad</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-foreach="bank_dict[company][journal]" t-as="line">
+                                                <td style="width: 12%"><span t-field="line.date"/></td>
+                                                <td style="width: 68%"><span t-field="line.name"/></td>
+                                                <td style="width: 20%" class="text-right"><span t-field="line.amount"/></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </t>
+                            </t>
+                        </t>
+                    </t>
+                    <t t-if="docs.include_customer_invoices">
+                        <center><h2>Facturas de cliente</h2></center>
+                        <table class="table table_condensed">
+                            <thead>
+                                <tr>
+                                    <th>Nº factura</th>
+                                    <th>Fecha</th>
+                                    <th>Compañía</th>
+                                    <th>Cliente</th>
+                                    <th>Importe</th>
+                                    <th>Saldo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="docs.customer_invoices.sorted(key=lambda r: r.date_invoice, reverse=True)" t-as="invoice">
+                                    <td><span t-field="invoice.number"/></td>
+                                    <td><span t-field="invoice.date_invoice"/></td>
+                                    <td><span t-field="invoice.company_id.company_abreviation"/></td>
+                                    <td><span t-field="invoice.partner_id.name"/></td>
+                                    <td><span t-field="invoice.amount_total"/></td>
+                                    <td><span t-field="invoice.residual"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                    <t t-if="docs.include_supplier_invoices">
+                        <center><h2>Facturas de proveedor</h2></center>
+                        <table class="table table_condensed">
+                            <thead>
+                                <tr>
+                                    <th>Nº factura</th>
+                                    <th>Fecha</th>
+                                    <th>Compañía</th>
+                                    <th>Proveedor</th>
+                                    <th>Importe</th>
+                                    <th>Saldo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="docs.supplier_invoices.sorted(key=lambda r: r.date_invoice, reverse=True)" t-as="invoice">
+                                    <td><span t-field="invoice.reference"/></td>
+                                    <td><span t-field="invoice.date_invoice"/></td>
+                                    <td><span t-field="invoice.company_id.company_abreviation"/></td>
+                                    <td><span t-field="invoice.partner_id.name"/></td>
+                                    <td><span t-field="invoice.amount_total"/></td>
+                                    <td><span t-field="invoice.residual"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                    <t t-if="docs.include_pagares and (docs.pagares_rec or docs.pagares_ent)">
+                        <t t-if="docs.pagares_rec">
+                            <center><h2>Pagarés recibidos</h2></center>
+                            <table class="table table_condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha de vencimiento</th>
+                                        <th>Compañía</th>
+                                        <th>Cliente</th>
+                                        <th>Importe</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="docs.pagares_rec" t-as="pagare">
+                                        <td><span t-field="pagare.date_maturity"/></td>
+                                        <td><span t-field="pagare.company_id.company_abreviation"/></td>
+                                        <td><span t-field="pagare.partner_id.name"/></td>
+                                        <td><span t-field="pagare.debit"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+                        <t t-if="docs.pagares_ent">
+                            <center><h2>Pagarés entregados</h2></center>
+                            <table class="table table_condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha de vencimiento</th>
+                                        <th>Compañía</th>
+                                        <th>Cliente</th>
+                                        <th>Importe</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="docs.pagares_ent" t-as="pagare">
+                                            <td><span t-field="pagare.date_maturity"/></td>
+                                        <td><span t-field="pagare.company_id.company_abreviation"/></td>
+                                        <td><span t-field="pagare.partner_id.name"/></td>
+                                        <td><span t-field="pagare.credit"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="paperformat_euro_lowmargin" model="report.paperformat">
+        <field name="name">European A4 low margin</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">5</field>
+        <field name="margin_bottom">5</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">80</field>
+    </record>
+
+    <report
+        id="action_situation_report"
+        string="Situation report"
+        model="situation.report"
+        report_type="qweb-pdf"
+        menu="False"
+        file="situation_report.situation_report"
+        name="situation_report.situation_report"
+        paperformat="situation_report.paperformat_euro_lowmargin"
+    />
+</odoo>

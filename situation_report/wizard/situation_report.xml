@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- situation.report form view -->
+    <record id="situation_report_view_form" model="ir.ui.view">
+        <field name="name">situation.report.view.form</field>
+        <field name="model">situation.report</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <group>
+                    <field name="include_orders"/>
+                    <field name="include_bank_movements"/>
+                    <field name="include_customer_invoices"/>
+                    <field name="include_supplier_invoices"/>
+                    <field name="include_pagares"/>
+                </group>
+                <notebook>
+                    <page string="Bank movements" attrs="{'invisible': [('include_bank_movements', '!=', True)]}">
+                        <label for="bank_movements_weeks" string="Weeks"/>
+                        <field name="bank_movements_weeks"/>
+                    </page>
+                    <page string="Customer invoices" attrs="{'invisible': [('include_customer_invoices', '!=', True)]}">
+                        <label for="customer_invoices_weeks" string="Weeks"/>
+                        <field name="customer_invoices_weeks"/>
+                    </page>
+                    <page string="Supplir invoices" attrs="{'invisible': [('include_supplier_invoices', '!=', True)]}">
+                        <label for="supplier_invoices_weeks" string="Weeks"/>
+                        <field name="supplier_invoices_weeks"/>
+                    </page>
+                </notebook>
+                <footer>
+                    <button name="generate_report" string="Generate report" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <act_window name="Situation report"
+        res_model="situation.report"
+        view_id="situation_report_view_form"
+        view_mode="form"
+        target="new"
+        id="action_situation_report"/>
+
+    <menuitem id="situation_report_menu_act" name="Situation report" parent="account.menu_finance" action="action_situation_report" />
+
+</odoo>

@@ -33,7 +33,7 @@
         </xpath>
         <xpath expr="//div[@class='text-muted']" position="replace"/>
         <xpath expr="//div[@class='footer']//div[@name='financial_infos']" position="before">
-            <t t-if="o._name == 'stock.picking'">
+            <t t-if="o and o._name == 'stock.picking'">
                 <p style="margin:0; font-size:20px;">DOCUMENTO CONTROL TRANSPORTE MERCANCÍAS</p>
                 <p style="margin:0; font-size:10px;" t-if="o.note" t-field="o.note"/>
             </t>
