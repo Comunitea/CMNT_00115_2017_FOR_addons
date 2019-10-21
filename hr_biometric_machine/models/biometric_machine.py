@@ -57,7 +57,8 @@ class BiometricData(models.Model):
 
     name = fields.Char('Name')
     ip_address = fields.Char('Ip address')
-    port = fields.Integer('Port')
+    password = fields.Integer('Password')
+    port = fields.Integer('Port', default=4270)
     sequence = fields.Integer('Sequence')
     timezone = fields.Selection(
         _tz_get, 'Timezone', size=64,
@@ -76,7 +77,11 @@ class BiometricData(models.Model):
     interval_max = fields.Selection(
         [('sec', 'Sec(s)'), ('min', 'Min(s)'),
          ('hour', 'Hour(s)'), ('days', 'Day(s)'), ],
-        'Max allowed time', help='Max allowed time between two registers',)
+        'Max allowed time', help='Max allowed time between two registers')
+    mode = fields.Selection(
+        [('manual', 'Manual'), ('auto', 'Auto')], 'Mode', 
+        default='auto', required=True)
+    ommit_ping = fields.Boolean('Ommit Ping')
 
     @api.model
     def get_users(self):
@@ -84,7 +89,7 @@ class BiometricData(models.Model):
         Function use to get all the registered users
         at the biometric device
         """
-        with ConnectToDevice(self.ip_address, self.port) as conn:
+        with ConnectToDevice(self.ip_address, self.port, self.ommit_ping, self.password) as conn:
             users = conn.get_users()
         return users
 
@@ -94,7 +99,7 @@ class BiometricData(models.Model):
         Function use to clean all attendances
         at the biometric device
         """
-        with ConnectToDevice(self.ip_address, self.port) as conn:
+        with ConnectToDevice(self.ip_address, self.port, self.ommit_ping, self.password) as conn:
             conn.clear_attendance()
 
     @api.model
@@ -122,7 +127,7 @@ class BiometricData(models.Model):
         Function uses to get attendances
         """
         self.create_user()
-        with ConnectToDevice(self.ip_address, self.port) as conn:
+        with ConnectToDevice(self.ip_address, self.port, self.ommit_ping, self.password) as conn:
             attendaces = conn.get_attendance()
         # Attendances are group by user
         for user_attendances in attendaces:
@@ -132,7 +137,8 @@ class BiometricData(models.Model):
                 if a.action_perform != b.action_perform:
                     continue
                 if abs(a.timestamp - b.timestamp) < self.min_time:
-                    user_attendances.remove(a)
+                    if a in user_attendances:
+                        user_attendances.remove(a)
         return attendaces
 
 
@@ -142,9 +148,9 @@ class ConnectToDevice(object):
     It is using to disable the device when it is been reading or busy
     """
 
-    def __init__(self, ip_address, port):
+    def __init__(self, ip_address, port, ommit_ping=False, password=0):
         try:
-            zk = ZkOpenerp(ip_address, port)
+            zk = ZkOpenerp(ip_address, port, ommit_ping=ommit_ping, password=password)
             conn = zk.connect()
         except:
             raise UserError(
