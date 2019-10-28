@@ -46,7 +46,8 @@ class SituationReport(models.TransientModel):
                 .search(
                     [
                         ("state", "in", ("sale", "done")),
-                        ("invoice_status", "=", "to invoice"),
+                        ("invoice_status", "!=", "invoiced"),
+                        ("confirmation_date", ">", "2019-10-20"),
                     ]
                 )
             )
@@ -111,7 +112,7 @@ class SituationReport(models.TransientModel):
             .search([("date", ">=", bank_movements_date)])
         )
         for statement in bank_statement_ids.sorted(
-            key=lambda r: r.date, reverse=False
+            key=lambda r: r.date, reverse=True
         ):
             if statement.statement_id.journal_id.type == "cash":
                 if statement.company_id not in return_data["cash"]:

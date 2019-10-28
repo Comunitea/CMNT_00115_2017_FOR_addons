@@ -82,28 +82,8 @@
                         </t>
                     </t>
                     <t t-if="docs.include_bank_movements and docs.get_bank_datas()">
-                        <center><h2>Movimientos bancarios</h2></center>
+                        <center><h2>Movimientos</h2></center>
                         <t t-set="bank_dict" t-value="docs.get_bank_datas()"/>
-                        <center><h3>Efectivo</h3></center>
-                        <t t-foreach="bank_dict['cash'].keys()" t-as="company">
-                                <center><h5><spant t-field="company.company_abreviation"/></h5></center>
-                            <table class="table table-condensed">
-                                <thead>
-                                    <tr>
-                                        <th>Fecha</th>
-                                        <th>Descripción</th>
-                                        <th  class="text-right">Cantidad</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr t-foreach="bank_dict['cash'][company]" t-as="line">
-                                        <td style="width: 12%"><span t-field="line.date"/></td>
-                                        <td style="width: 68%"><span t-field="line.name"/></td>
-                                        <td style="width: 20%" class="text-right"><span t-field="line.amount"/></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </t>
                         <center><h3>Banco</h3></center>
                         <t t-foreach="bank_dict.keys()" t-as="company">
                             <t t-if="company != 'cash'">
@@ -129,13 +109,33 @@
                                 </t>
                             </t>
                         </t>
+                        <center><h3>Efectivo</h3></center>
+                        <t t-foreach="bank_dict['cash'].keys()" t-as="company">
+                                <center><h5><spant t-field="company.company_abreviation"/></h5></center>
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Descripción</th>
+                                        <th  class="text-right">Cantidad</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="bank_dict['cash'][company]" t-as="line">
+                                        <td style="width: 12%"><span t-field="line.date"/></td>
+                                        <td style="width: 68%"><span t-field="line.name"/></td>
+                                        <td style="width: 20%" class="text-right"><span t-field="line.amount"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
                     </t>
                     <t t-if="docs.include_customer_invoices">
                         <center><h2>Facturas de cliente</h2></center>
                         <table class="table table_condensed">
                             <thead>
                                 <tr>
-                                    <th>Nº factura</th>
+                                    <th width="12%">Nº factura</th>
                                     <th>Fecha</th>
                                     <th>Compañía</th>
                                     <th>Cliente</th>
@@ -160,7 +160,7 @@
                         <table class="table table_condensed">
                             <thead>
                                 <tr>
-                                    <th>Nº factura</th>
+                                    <th width="12%">Nº factura</th>
                                     <th>Fecha</th>
                                     <th>Compañía</th>
                                     <th>Proveedor</th>
@@ -170,7 +170,7 @@
                             </thead>
                             <tbody>
                                 <tr t-foreach="docs.supplier_invoices.sorted(key=lambda r: r.date_invoice, reverse=True)" t-as="invoice">
-                                    <td><span t-field="invoice.reference"/></td>
+                                    <td><span t-field="invoice.number"/></td>
                                     <td><span t-field="invoice.date_invoice"/></td>
                                     <td><span t-field="invoice.company_id.company_abreviation"/></td>
                                     <td><span t-field="invoice.partner_id.name"/></td>
@@ -193,7 +193,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr t-foreach="docs.pagares_rec" t-as="pagare">
+                                    <tr t-foreach="docs.pagares_rec.sorted(lambda r: r.date_maturity)" t-as="pagare">
                                         <td><span t-field="pagare.date_maturity"/></td>
                                         <td><span t-field="pagare.company_id.company_abreviation"/></td>
                                         <td><span t-field="pagare.partner_id.name"/></td>
@@ -214,7 +214,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr t-foreach="docs.pagares_ent" t-as="pagare">
+                                    <tr t-foreach="docs.pagares_ent.sorted(lambda r: r.date_maturity)" t-as="pagare">
                                             <td><span t-field="pagare.date_maturity"/></td>
                                         <td><span t-field="pagare.company_id.company_abreviation"/></td>
                                         <td><span t-field="pagare.partner_id.name"/></td>
