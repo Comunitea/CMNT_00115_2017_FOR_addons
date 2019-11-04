@@ -118,7 +118,7 @@ class SituationReport(models.TransientModel):
                 if statement.company_id not in return_data["cash"]:
                     return_data["cash"][statement.company_id] = self.env[
                         "account.bank.statement.line"
-                    ]
+                    ].sudo()
                 return_data["cash"][statement.company_id] += statement
             else:
                 if statement.company_id not in return_data:

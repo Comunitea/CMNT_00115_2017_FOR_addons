@@ -81,9 +81,9 @@
                             </div>
                         </t>
                     </t>
-                    <t t-if="docs.include_bank_movements and docs.get_bank_datas()">
+                    <t t-if="docs.include_bank_movements and docs.sudo().get_bank_datas()">
                         <center><h2>Movimientos</h2></center>
-                        <t t-set="bank_dict" t-value="docs.get_bank_datas()"/>
+                        <t t-set="bank_dict" t-value="docs.sudo().get_bank_datas()"/>
                         <center><h3>Banco</h3></center>
                         <t t-foreach="bank_dict.keys()" t-as="company">
                             <t t-if="company != 'cash'">
@@ -215,7 +215,7 @@
                                 </thead>
                                 <tbody>
                                     <tr t-foreach="docs.pagares_ent.sorted(lambda r: r.date_maturity)" t-as="pagare">
-                                            <td><span t-field="pagare.date_maturity"/></td>
+                                        <td><span t-field="pagare.date_maturity"/></td>
                                         <td><span t-field="pagare.company_id.company_abreviation"/></td>
                                         <td><span t-field="pagare.partner_id.name"/></td>
                                         <td><span t-field="pagare.credit"/></td>
