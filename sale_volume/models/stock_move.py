@@ -69,8 +69,9 @@ class StockMove(models.Model):
     def copy(self, default={}):
         if 'initial_demand_units' not in default and \
                 'product_uom_qty' in default:
-            default['initial_demand_units'] = default['product_uom_qty'] / \
-                self.ud_qty_ratio
+            if self.ud_qty_ratio:
+                default['initial_demand_units'] = default['product_uom_qty'] / \
+                    self.ud_qty_ratio
         return super().copy(default)
 
     def _action_done(self):
